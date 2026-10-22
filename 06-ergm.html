@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>6&nbsp; Экспоненциальные модели случайных графов: Введение в анализ социальных сетей</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./07-semantic-networks.html" rel="next">
+<link href="./05-random-graphs.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f2f553a25c8c443dad0d61a5c444ed52.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Поиск не дал результатов",
+    "search-matching-documents-text": "Результаты поиска",
+    "search-copy-link-title": "Скопировать ссылку",
+    "search-hide-matches-text": "Скрыть дополнительные результаты",
+    "search-more-match-text": "дополнительный результат в этом документе",
+    "search-more-matches-text": "дополнительных результата(-ов) в этом документе",
+    "search-clear-button-title": "Очистить",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Отменить",
+    "search-submit-button-title": "Найти",
+    "search-label": "Поиск"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Переключить боковую панель навигации" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-ergm.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Экспоненциальные модели случайных графов</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Переключить боковую панель навигации" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Поиск" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Введение в анализ социальных сетей</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Переключить режим чтения">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Поиск"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Предисловие</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Словарь терминов</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Сети и графы</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-graph-theory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Элементы теории графов</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-centrality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Центральность</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-ties-and-groups.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Взаимность, гомофилия, кластеризация</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-random-graphs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Случайные графы</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-ergm.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Экспоненциальные модели случайных графов</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-semantic-networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Практикум: семантическая сеть</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Литература</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+<div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
+<p><a href="https://darkhanmedeuov.github.io/intro_sna_book/kk/" class="sidebar-lang-link">Қазақ тіліндегі нұсқасы</a></p>
+</div></div></nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Содержание</h2>
+   
+  <ul class="collapse">
+  <li><a href="#sec-why-ergm" id="toc-sec-why-ergm" class="nav-link active" data-scroll-target="#sec-why-ergm"><span class="header-section-number">6.1</span> Зачем нужна особая статистика</a></li>
+  <li><a href="#sec-ergm-model" id="toc-sec-ergm-model" class="nav-link" data-scroll-target="#sec-ergm-model"><span class="header-section-number">6.2</span> Модель</a></li>
+  <li><a href="#sec-ergm-fit" id="toc-sec-ergm-fit" class="nav-link" data-scroll-target="#sec-ergm-fit"><span class="header-section-number">6.3</span> Оценка и проверка модели</a></li>
+  <li><a href="#sec-school-ergm" id="toc-sec-school-ergm" class="nav-link" data-scroll-target="#sec-school-ergm"><span class="header-section-number">6.4</span> Модель школьной сети</a></li>
+  <li><a href="#sec-ergm-r" id="toc-sec-ergm-r" class="nav-link" data-scroll-target="#sec-ergm-r"><span class="header-section-number">6.5</span> В R</a></li>
+  <li><a href="#sec-ergm-ex" id="toc-sec-ergm-ex" class="nav-link" data-scroll-target="#sec-ergm-ex"><span class="header-section-number">6.6</span> Вопросы и упражнения</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-ergm" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Экспоненциальные модели случайных графов</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Глава <a href="05-random-graphs.html" class="quarto-xref"><span>5</span></a> закончилась выводом: в реальных сетях вероятность связи зависит от контекста. Ответная связь вероятнее случайной. Связь, замыкающая треугольник, тоже вероятнее. Похожие люди связаны чаще непохожих. Экспоненциальные модели случайных графов (exponential random graph models, ERGM) позволяют учесть всё это сразу и проверить, какие процессы действительно работают в сети. Сегодня это основной инструмент статистического моделирования социальных сетей <span class="citation" data-cites="hunter2008">(<a href="references.html#ref-hunter2008" role="doc-biblioref">Hunter и др. 2008 г.</a>)</span>. В этой главе мы разберём логику ERGM, научимся читать её коэффициенты и построим модель школьной сети.</p>
+<section id="sec-why-ergm" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="sec-why-ergm"><span class="header-section-number">6.1</span> Зачем нужна особая статистика</h2>
+<p>Связь между двумя узлами можно считать бинарной переменной <span class="math inline">\(y_{ij}\)</span>. Она равна 1 при наличии связи и 0 при её отсутствии. Бинарные переменные обычно моделируют логистической регрессией. Напомним её устройство. Логарифм шансов события линейно зависит от объясняющих переменных:</p>
+<p><span class="math display">\[
+\text{logit}(p) = \log \frac{p}{1 - p} = \beta_0 + \beta_1 x_1 + \dots
+\]</span></p>
+<p>Здесь <span class="math inline">\(p\)</span> означает вероятность события, например вероятность связи. Отношение <span class="math inline">\(p / (1 - p)\)</span> называют <em>шансами</em>: это вероятность того, что событие произойдёт, деленная на вероятность того, что оно не произойдёт. Вероятности 0,5 соответствуют шансы 1, вероятности 0,8 соответствуют шансы 4 («четыре к одному»). Знак <span class="math inline">\(\log\)</span> обозначает натуральный логарифм. Логарифм шансов называют <em>логитом</em>. Справа стоит линейная комбинация, как в обычной регрессии: свободный член <span class="math inline">\(\beta_0\)</span> плюс коэффициенты <span class="math inline">\(\beta_1, \beta_2, \dots\)</span>, умноженные на значения объясняющих переменных <span class="math inline">\(x_1, x_2, \dots\)</span>. Многоточие означает, что переменных может быть сколько угодно. Обратное преобразование <span class="math inline">\(\text{logit}^{-1}\)</span> переводит логит обратно в вероятность: <span class="math inline">\(p = 1 / (1 + e^{-\text{logit}})\)</span>. В R это функция <code>plogis()</code>.</p>
+<p>Можно было бы предсказывать связь по атрибутам узлов: полу, возрасту, богатству. Ранние модели сетей так и делали. Модель <span class="math inline">\(p_1\)</span> описывала логарифм шансов связи через «общительность» отправителя <span class="math inline">\(\alpha_i\)</span>, «привлекательность» получателя <span class="math inline">\(\beta_j\)</span> и общий эффект взаимности <span class="citation" data-cites="holland1981">(<a href="references.html#ref-holland1981" role="doc-biblioref">Holland и Leinhardt 1981 г.</a>)</span>.</p>
+<p>Беда в том, что логистическая регрессия предполагает независимость наблюдений. Связи в сети не независимы. Вероятность того, что Нуртас назовёт Кайрата другом, зависит от того, назвал ли Кайрат Нуртаса. Вероятность дружбы Кайрата и Жанны зависит от того, сколько у них общих друзей. Вероятность связи зависит от состояния самой сети. В статистике такую зависимость называют эндогенностью. ERGM учитывает её явно.</p>
+</section>
+<section id="sec-ergm-model" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="sec-ergm-model"><span class="header-section-number">6.2</span> Модель</h2>
+<p>ERGM задаёт вероятность того, что сеть целиком окажется в определённом состоянии:</p>
+<p><span id="eq-ergm"><span class="math display">\[
+P(Y = y) = \frac{\exp\{\theta' z(y)\}}{k(\theta)}.
+\tag{6.1}\]</span></span></p>
+<p>Здесь <span class="math inline">\(Y\)</span> означает сеть как случайную величину: набор всех возможных состояний с их вероятностями. Буква <span class="math inline">\(y\)</span> означает конкретное состояние, например наблюдаемую сеть. Вектор <span class="math inline">\(z(y)\)</span> состоит из <em>статистик сети</em>: числа связей, числа взаимных диад, числа треугольников, числа связей внутри пола. Статистики выбирает исследователь, исходя из теории. Вектор <span class="math inline">\(\theta\)</span> содержит коэффициенты при статистиках. Их оценивает алгоритм. Знаменатель <span class="math inline">\(k(\theta)\)</span> нормирует вероятности так, чтобы их сумма по всем возможным сетям равнялась единице.</p>
+<p>Запись <span class="math inline">\(\exp\{\cdot\}\)</span> означает экспоненту, то есть число <span class="math inline">\(e\)</span> в степени выражения в скобках. Штрих в записи <span class="math inline">\(\theta' z(y)\)</span> означает произведение двух векторов: каждый коэффициент умножается на свою статистику, произведения складываются. В модели с двумя статистиками, числом связей и числом взаимных диад, <span class="math inline">\(\theta' z(y) = \theta_1 \cdot (\text{число связей}) + \theta_2 \cdot (\text{число взаимных диад})\)</span>. Экспонента превращает эту сумму в положительное число. Чем больше сумма, тем вероятнее сеть.</p>
+<p>Формулу удобно читать как шпаргалку. Вероятность сети тем выше, чем больше в ней тех конфигураций, коэффициенты при которых положительны. Если коэффициент при числе взаимных диад положителен, сети с большим числом взаимных диад вероятнее.</p>
+<p>Вычислить <span class="math inline">\(k(\theta)\)</span> напрямую невозможно. Для этого пришлось бы перебрать все возможные сети. В направленной сети из 30 узлов <span class="math inline">\(30 \cdot 29 = 870\)</span> возможных связей, а значит <span class="math inline">\(2^{870} \approx 10^{262}\)</span> возможных сетей. Для сравнения, атомов в наблюдаемой Вселенной около <span class="math inline">\(10^{80}\)</span>. Поэтому ERGM, известные с 1980-х годов, стали практичными лишь с ростом вычислительных мощностей и развитием методов симуляции.</p>
+<section id="статистика-изменения" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="статистика-изменения"><span class="header-section-number">6.2.1</span> Статистика изменения</h3>
+<p>К счастью, константа <span class="math inline">\(k(\theta)\)</span> сокращается, если сравнить две сети, которые отличаются одной связью. Обозначим через <span class="math inline">\(y_{ij}^{+}\)</span> сеть, в которой связь <span class="math inline">\(ij\)</span> есть, а через <span class="math inline">\(y_{ij}^{-}\)</span> ту же сеть без этой связи. Тогда логарифм шансов связи при неизменной остальной сети равен</p>
+<p><span id="eq-change"><span class="math display">\[
+\log \frac{P(Y_{ij} = 1 \mid \text{остальная сеть})}{P(Y_{ij} = 0 \mid \text{остальная сеть})}
+= \theta' \left[z(y_{ij}^{+}) - z(y_{ij}^{-})\right] = \theta' \delta_{ij}.
+\tag{6.2}\]</span></span></p>
+<p>Слева стоит логарифм шансов связи между узлами <span class="math inline">\(i\)</span> и <span class="math inline">\(j\)</span>. Вертикальная черта <span class="math inline">\(\mid\)</span> читается «при условии». Запись <span class="math inline">\(P(Y_{ij} = 1 \mid \text{остальная сеть})\)</span> означает вероятность связи при условии, что все остальные связи сети уже заданы. В квадратных скобках стоит разность статистик двух сетей: с этой связью и без неё. Разность умножается на коэффициенты так же, как в формуле <a href="#eq-ergm" class="quarto-xref"><span>6.1</span></a>. Например, пусть связь <span class="math inline">\(ij\)</span> добавляет одну связь и замыкает два треугольника. Тогда в модели с членами <code>edges</code> и <code>triangle</code> получаем <span class="math inline">\(\delta_{ij} = (1, 2)\)</span>, а логарифм шансов связи равен <span class="math inline">\(\theta_{edges} + 2\,\theta_{triangle}\)</span>.</p>
+<p>Вектор <span class="math inline">\(\delta_{ij}\)</span> называют <em>статистикой изменения</em> (change statistic). Он показывает, как изменятся статистики сети, если связь <span class="math inline">\(ij\)</span> появится. Формула выглядит как логистическая регрессия. Роль объясняющих переменных играют изменения статистик. Отсюда простое правило чтения коэффициентов. Коэффициент показывает, на сколько меняется логарифм шансов связи, если её появление увеличивает соответствующую статистику на единицу.</p>
+<p>Возьмём сеть «Кайрат и Нуртас» и рассмотрим две возможные новые связи: между Кайратом и Арманом и между Кайратом и Жанной (<a href="#tbl-change" class="quarto-xref">табл.&nbsp;<span>6.1</span></a>). Обе связи одинаково увеличивают число связей, плотность и среднюю степень. Однако связь с Арманом снижает кластеризацию: у Армана появятся два друга, которые не дружат между собой. Связь с Жанной кластеризацию повышает: она замыкает треугольник Кайрат, Асель, Жанна. Если коэффициент при кластеризации положителен, модель сочтёт вторую связь более вероятной.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-change" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-change-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;6.1: Статистики сети «Кайрат и Нуртас» до и после добавления одной связи
+</figcaption>
+<div aria-describedby="tbl-change-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 37%">
+<col style="width: 18%">
+<col style="width: 22%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Исходная сеть</th>
+<th style="text-align: right;">+ Кайрат и Арман</th>
+<th style="text-align: right;">+ Кайрат и Жанна</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Плотность</td>
+<td style="text-align: right;">0,50</td>
+<td style="text-align: right;">0,60</td>
+<td style="text-align: right;">0,60</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Средняя степень</td>
+<td style="text-align: right;">2,00</td>
+<td style="text-align: right;">2,40</td>
+<td style="text-align: right;">2,40</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Разброс степеней (ст. откл.)</td>
+<td style="text-align: right;">0,71</td>
+<td style="text-align: right;">0,55</td>
+<td style="text-align: right;">0,89</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Кластеризация</td>
+<td style="text-align: right;">0,50</td>
+<td style="text-align: right;">0,33</td>
+<td style="text-align: right;">0,60</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Среднее расстояние</td>
+<td style="text-align: right;">1,70</td>
+<td style="text-align: right;">1,40</td>
+<td style="text-align: right;">1,50</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Диаметр</td>
+<td style="text-align: right;">3,00</td>
+<td style="text-align: right;">2,00</td>
+<td style="text-align: right;">3,00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="первые-модели" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="первые-модели"><span class="header-section-number">6.2.2</span> Первые модели</h3>
+<p>Посмотрим на модели для флорентийских браков (глава <a href="03-centrality.html" class="quarto-xref"><span>3</span></a>). Простейшая модель содержит одну статистику, число связей (<code>edges</code>):</p>
+<p>Её коэффициент равен −1,61. Это логарифм шансов любой связи. Перевод в вероятность даёт <span class="math inline">\(\text{logit}^{-1}(-1{,}61) =
+0{,}167\)</span>, то есть ровно плотность сети. Модель с одним членом <code>edges</code> есть случайный граф из главы <a href="05-random-graphs.html" class="quarto-xref"><span>5</span></a>.</p>
+<p>Добавим число треугольников (<code>triangle</code>). Если связь замыкает <span class="math inline">\(t\)</span> треугольников, её логарифм шансов равен <span class="math inline">\(\theta_{edges} + t\,\theta_{triangle}\)</span>. Оценка коэффициента при треугольниках равна 0,18, но она незначима (<span class="math inline">\(p = 0{,}75\)</span>). Брачные союзы флорентийских семей не склонны замыкаться в треугольники.</p>
+<p>Добавим вместо треугольников атрибут узла, богатство семьи. Член <code>nodecov("wealth")</code> добавляет к логарифму шансов связи слагаемое <span class="math inline">\(\theta (w_i + w_j)\)</span>, где <span class="math inline">\(w_i\)</span> означает богатство семьи <span class="math inline">\(i\)</span>. Коэффициент небольшой, но значимый (0,011). Для брака двух беднейших семей (богатство 3) вероятность связи равна 7%. Для брака двух богатейших (146) она равна 62%. Богатые семьи роднились с богатыми.</p>
+</section>
+</section>
+<section id="sec-ergm-fit" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="sec-ergm-fit"><span class="header-section-number">6.3</span> Оценка и проверка модели</h2>
+<p>Работа с ERGM обычно идёт по кругу.</p>
+<ol type="1">
+<li>Выбрать статистики, исходя из теории. Сначала посчитать их значения на наблюдаемой сети.</li>
+<li>Оценить коэффициенты. Алгоритм ищет такие значения <span class="math inline">\(\theta\)</span>, при которых сети, симулированные из модели, в среднем имеют те же статистики, что наблюдаемая сеть. Для этого используется метод Монте-Карло для марковских цепей (MCMC).</li>
+<li>Проверить сходимость цепей.</li>
+<li>Проверить согласие модели с данными (goodness of fit, GOF). Из модели симулируют множество сетей и сравнивают с наблюдаемой по характеристикам, которые в модель не входили: распределениям степеней, общих партнёров, расстояний. Если согласие плохое, вернуться к шагу 1.</li>
+</ol>
+<section id="вырожденность" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="вырожденность"><span class="header-section-number">6.3.1</span> Вырожденность</h3>
+<p>Добавлять статистики нужно осторожно. Рассмотрим модель флорентийского размера (16 узлов) с членами <code>edges</code> и <code>triangle</code>. Закрепим коэффициент при <code>edges</code> на уровне <span class="math inline">\(-2\)</span> и будем постепенно увеличивать коэффициент при <code>triangle</code>. На <a href="#fig-degeneracy" class="quarto-xref">рис.&nbsp;<span>6.1</span></a> показана средняя плотность симулированных сетей.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-degeneracy" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-degeneracy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-ergm_files/figure-html/fig-degeneracy-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-degeneracy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;6.1: Средняя плотность сетей, симулированных из модели edges + triangle (16 узлов, коэффициент при edges равен −2)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>До некоторого порога сеть остаётся разреженной. Затем она скачком становится полной: реализуются все возможные связи. Причина в том, что в плотной сети одна новая связь замыкает сразу много треугольников. Бонус умножается на их число. Каждая новая связь делает следующую ещё вероятнее. Сеть лавинообразно заполняется. Модели, которые порождают такие нереалистичные сети, называют <em>вырожденными</em> (degenerate). Оценка вырожденной модели обычно не сходится.</p>
+</section>
+<section id="геометрически-взвешенные-статистики" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="геометрически-взвешенные-статистики"><span class="header-section-number">6.3.2</span> Геометрически взвешенные статистики</h3>
+<p>Выход состоит в том, чтобы вклад каждой следующей конфигурации убывал. Так устроены <em>геометрически взвешенные</em> статистики <span class="citation" data-cites="hunter2007">(<a href="references.html#ref-hunter2007" role="doc-biblioref">Hunter 2007 г.</a>)</span>. Член <code>gwesp</code> (geometrically weighted edgewise shared partners) поощряет связи между узлами с общими партнёрами. Первый общий партнёр даёт полный бонус, второй половину, третий четверть и т. д. При параметре затухания <span class="math inline">\(\alpha = \ln 2 \approx 0{,}69\)</span> вклад связи с одним, двумя и тремя общими партнёрами относится как <span class="math inline">\(1 : 1{,}5 : 1{,}75\)</span>. Он никогда не превышает 2. Это похоже на убывающую предельную полезность в экономике. Десятый общий друг почти ничего не добавляет к вероятности знакомства. Родственный член <code>gwdsp</code> (dyadwise shared partners) считает общих партнёров у всех пар узлов, а не только у связанных.</p>
+<p>Член <code>gwdegree</code> (в направленных сетях <code>gwidegree</code> и <code>gwodegree</code>) управляет формой распределения степеней. Когда узел со степенью <span class="math inline">\(k\)</span> получает новую связь, статистика растёт на <span class="math inline">\((1 - e^{-\alpha})^k\)</span>. При <span class="math inline">\(\alpha = \ln 2\)</span> это <span class="math inline">\(1/2^k\)</span>. Первая связь узла меняет статистику сильнее всех последующих. Поэтому знак коэффициента читается так <span class="citation" data-cites="levy2016">(<a href="references.html#ref-levy2016" role="doc-biblioref">Levy 2016 г.</a>)</span>. Отрицательный коэффициент означает, что первая связь даётся труднее остальных. Связи концентрируются на узлах, у которых они уже есть: в сети больше изолятов и больше хабов. Положительный коэффициент означает обратное: связи распределяются равномернее, изоляты редки.</p>
+</section>
+</section>
+<section id="sec-school-ergm" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="sec-school-ergm"><span class="header-section-number">6.4</span> Модель школьной сети</h2>
+<p>Построим модель школьной сети шаг за шагом. Первая модель содержит только <code>edges</code>. Вторая добавляет гомофилию по полу: член <code>nodematch("sex")</code> считает связи между учениками одного пола. Третья добавляет взаимность (<code>mutual</code>) и разрешает гомофилии быть разной у девушек и юношей (<code>diff = TRUE</code>). Четвёртая модель полная. Она добавляет активность юношей как отправителей (<code>nodeofactor</code>), гомофилию по самоотнесению к казахам и русским, а также структурные члены. <code>gwidegree</code> и <code>gwodegree</code> описывают распределения входящих и исходящих степеней. <code>m2star</code> описывает связь входящих и исходящих степеней узла. <code>dgwesp</code> описывает замыкание треугольников в направленной сети. Результаты собраны в <a href="#tbl-school-ergm" class="quarto-xref">табл.&nbsp;<span>6.2</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-school-ergm" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-school-ergm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;6.2: Модели школьной сети. В скобках стандартные ошибки. Звёздочки: * p &lt; 0,05; ** p &lt; 0,01; *** p &lt; 0,001
+</figcaption>
+<div aria-describedby="tbl-school-ergm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Член</th>
+<th style="text-align: right;">Модель 1</th>
+<th style="text-align: right;">Модель 2</th>
+<th style="text-align: right;">Модель 3</th>
+<th style="text-align: right;">Модель 4</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>edges</code></td>
+<td style="text-align: right;">−2,19*** (0,10)</td>
+<td style="text-align: right;">−3,37*** (0,25)</td>
+<td style="text-align: right;">−3,55*** (0,24)</td>
+<td style="text-align: right;">−2,63*** (0,45)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>nodematch.sex</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">1,64*** (0,28)</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>mutual</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">1,96*** (0,35)</td>
+<td style="text-align: right;">1,68*** (0,39)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>nodeofactor.sex.male</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">−1,69* (0,72)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>nodematch.sex.female</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">1,24*** (0,27)</td>
+<td style="text-align: right;">0,32 (0,28)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>nodematch.sex.male</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">1,83*** (0,35)</td>
+<td style="text-align: right;">2,55*** (0,71)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>nodematch.ethnic_kaz</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0,17 (0,17)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>nodematch.ethnic_rus</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">−0,02 (0,19)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>gwideg.fixed.0.69</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0,12 (0,66)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>gwodeg.fixed.0.69</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">−1,44** (0,54)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>m2star</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">−0,09 (0,05)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>gwesp.OTP.fixed.0.69</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0,60*** (0,16)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AIC</td>
+<td style="text-align: right;">735</td>
+<td style="text-align: right;">689</td>
+<td style="text-align: right;">655</td>
+<td style="text-align: right;">613</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Коэффициент при <code>edges</code> всегда отрицателен: каждый ученик называет другом лишь малую долю одноклассников. Во второй модели коэффициент гомофилии положителен и значим. Вероятность того, что ученик назовёт другом одноклассника другого пола, равна <span class="math inline">\(\text{logit}^{-1}(-3{,}37) \approx 3\%\)</span>. Для одноклассника своего пола она равна <span class="math inline">\(\text{logit}^{-1}(-3{,}37 + 1{,}64) \approx 15\%\)</span>, то есть примерно в пять раз выше.</p>
+<p>Третья модель уточняет картину. Ответная номинация между девушками имеет вероятность 41%. Без взаимности эта вероятность падает до 9%. Гомофилия юношей сильнее гомофилии девушек.</p>
+<p>В полной модели происходят интересные перемены. Юноши в целом называют меньше друзей, чем девушки (<code>nodeofactor.sex.male</code>). После учёта этого гомофилия девушек перестаёт быть значимой (<span class="math inline">\(p = 0{,}26\)</span>), а гомофилия юношей становится ещё сильнее. Видимо, часть кажущейся гомофилии девушек объяснялась общей малой активностью юношей и замыканием треугольников в компаниях девушек. Этнической гомофилии нет: ни самоотнесение к казахам, ни самоотнесение к русским не влияют на выбор друзей. Положительный коэффициент при <code>dgwesp</code> означает, что общие друзья повышают вероятность дружбы. Отрицательный коэффициент при <code>gwodegree</code> означает большой разброс исходящих степеней: одни ученики не назвали никого, другие назвали девять и больше одноклассников. Член <code>gwidegree</code> незначим: входящие номинации не накапливаются у тех, кто их уже получил. AIC уменьшается от модели к модели.</p>
+<section id="согласие-с-данными" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="согласие-с-данными"><span class="header-section-number">6.4.1</span> Согласие с данными</h3>
+<p>На <a href="#fig-school-gof" class="quarto-xref">рис.&nbsp;<span>6.2</span></a> сравниваются первая и полная модели. Слева показано распределение исходящих степеней, справа распределение общих партнёров у связанных пар (edgewise shared partners).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-school-gof" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-school-gof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-ergm_files/figure-html/fig-school-gof-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-school-gof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;6.2: Согласие моделей 1 и 4 с данными. Точки показывают школьную сеть, ящики показывают сети, симулированные из модели
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Первая модель не справляется ни с тем, ни с другим. Она почти не порождает учеников с нулевой исходящей степенью. В школьной сети их около пятой части. У связанных пар в ней слишком мало общих партнёров. Полная модель воспроизводит оба распределения.</p>
+<p>Нулевые исходящие степени требуют отдельного комментария. Часть учеников могла отсутствовать в день опроса. Такой ученик никого не называет, но номинации одноклассников получает. В нашей модели этот артефакт сбора данных поглощается членом <code>gwodegree</code>. Если бы был известен список отсутствовавших, его следовало бы ввести в модель отдельным атрибутом. Тогда коэффициенты описывали бы дружбу, а не посещаемость.</p>
+</section>
+</section>
+<section id="sec-ergm-r" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="sec-ergm-r"><span class="header-section-number">6.5</span> В R</h2>
+<p>Модели ERGM оцениваются пакетом <strong>ergm</strong> из семейства <strong>statnet</strong>. Он работает с объектами пакета <strong>network</strong>. Перевести объект igraph поможет <strong>intergraph</strong>. Список всех членов модели открывает справка <code>?ergmTerm</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ergm)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>net <span class="ot">&lt;-</span> intergraph<span class="sc">::</span><span class="fu">asNetwork</span>(school)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> net <span class="sc">~</span> edges <span class="sc">+</span> mutual <span class="sc">+</span> <span class="fu">nodematch</span>(<span class="st">"sex"</span>, <span class="at">diff =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(f)                     <span class="co"># значения статистик на наблюдаемой сети</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">ergm</span>(f, <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">seed =</span> <span class="dv">1</span>))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)                   <span class="co"># таблица коэффициентов</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plogis</span>(<span class="fu">sum</span>(<span class="fu">coef</span>(fit)[<span class="fu">c</span>(<span class="st">"edges"</span>, <span class="st">"mutual"</span>)]))  <span class="co"># вероятность ответной связи</span></span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Симуляции из модели и проверка согласия:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sims <span class="ot">&lt;-</span> <span class="fu">simulate</span>(fit, <span class="at">nsim =</span> <span class="dv">3</span>)                 <span class="co"># три сети из модели</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>gf <span class="ot">&lt;-</span> <span class="fu">gof</span>(fit, <span class="at">GOF =</span> <span class="sc">~</span> idegree <span class="sc">+</span> odegree <span class="sc">+</span> espartners <span class="sc">+</span> distance)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gf)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc.diagnostics</span>(fit)                           <span class="co"># для моделей с MCMC</span></span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Атрибуты узлов в объекте network достаются оператором <code>%v%</code>: <code>net %v% "sex"</code>.</p>
+</section>
+<section id="sec-ergm-ex" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="sec-ergm-ex"><span class="header-section-number">6.6</span> Вопросы и упражнения</h2>
+<ol type="1">
+<li>Объясните, почему модель, содержащая только член <code>edges</code>, совпадает со случайным графом <span class="math inline">\(G(N, p)\)</span>. Чему равен её коэффициент?</li>
+<li>Используя <a href="#tbl-school-ergm" class="quarto-xref">табл.&nbsp;<span>6.2</span></a>, найдите вероятность невзаимной номинации от юноши к юноше в модели 3.</li>
+<li>Какой член модели отражает принцип «друзья моих друзей мои друзья»? Почему вместо простого числа треугольников используют <code>gwesp</code>?</li>
+<li>Положительный коэффициент при <code>gwdegree</code> часто ошибочно читают как «богатые богатеют». Объясните, что он означает на самом деле.</li>
+<li>Предложите модель для сети «кто кому помогает с домашним заданием». Какие члены вы бы включили и почему?</li>
+</ol>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-holland1981" class="csl-entry" role="listitem">
+Holland, Paul W. и Samuel Leinhardt. 1981 г. <span>«An Exponential Family of Probability Distributions for Directed Graphs»</span>. <em>Journal of the American Statistical Association</em> 76 (373): 33‑50.
+</div>
+<div id="ref-hunter2007" class="csl-entry" role="listitem">
+Hunter, David R. 2007 г. <span>«Curved Exponential Family Models for Social Networks»</span>. <em>Social Networks</em> 29 (2): 216‑230.
+</div>
+<div id="ref-hunter2008" class="csl-entry" role="listitem">
+Hunter, David R., Mark S. Handcock, Carter T. Butts, Steven M. Goodreau и Martina Morris. 2008 г. <span>«<span>ergm</span>: A Package to Fit, Simulate and Diagnose Exponential-Family Models for Networks»</span>. <em>Journal of Statistical Software</em> 24 (3): 1‑29.
+</div>
+<div id="ref-levy2016" class="csl-entry" role="listitem">
+Levy, Michael A. 2016 г. <span>«gwdegree: Improving Interpretation of Geometrically-Weighted Degree Estimates in Exponential Random Graph Models»</span>. <em>Journal of Open Source Software</em> 1 (3): 36.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Скопировано");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Скопировано");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./05-random-graphs.html" class="pagination-link" aria-label="Случайные графы">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Случайные графы</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./07-semantic-networks.html" class="pagination-link" aria-label="Практикум: семантическая сеть">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Практикум: семантическая сеть</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Введение в анализ социальных сетей. Автор: Дархан Медеуов.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Эта книга составлена с помощью <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

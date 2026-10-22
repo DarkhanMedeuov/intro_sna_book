@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>7&nbsp; Практикум: семантическая сеть: Введение в анализ социальных сетей</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./06-ergm.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f2f553a25c8c443dad0d61a5c444ed52.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Поиск не дал результатов",
+    "search-matching-documents-text": "Результаты поиска",
+    "search-copy-link-title": "Скопировать ссылку",
+    "search-hide-matches-text": "Скрыть дополнительные результаты",
+    "search-more-match-text": "дополнительный результат в этом документе",
+    "search-more-matches-text": "дополнительных результата(-ов) в этом документе",
+    "search-clear-button-title": "Очистить",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Отменить",
+    "search-submit-button-title": "Найти",
+    "search-label": "Поиск"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Переключить боковую панель навигации" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-semantic-networks.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Практикум: семантическая сеть</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Переключить боковую панель навигации" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Поиск" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Введение в анализ социальных сетей</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Переключить режим чтения">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Поиск"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Предисловие</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Словарь терминов</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Сети и графы</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-graph-theory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Элементы теории графов</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-centrality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Центральность</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-ties-and-groups.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Взаимность, гомофилия, кластеризация</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-random-graphs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Случайные графы</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-ergm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Экспоненциальные модели случайных графов</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-semantic-networks.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Практикум: семантическая сеть</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Литература</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+<div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
+<p><a href="https://darkhanmedeuov.github.io/intro_sna_book/kk/" class="sidebar-lang-link">Қазақ тіліндегі нұсқасы</a></p>
+</div></div></nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Содержание</h2>
+   
+  <ul class="collapse">
+  <li><a href="#sec-corpus" id="toc-sec-corpus" class="nav-link active" data-scroll-target="#sec-corpus"><span class="header-section-number">7.1</span> Корпус и разметка</a></li>
+  <li><a href="#sec-collocations" id="toc-sec-collocations" class="nav-link" data-scroll-target="#sec-collocations"><span class="header-section-number">7.2</span> От коллокаций к графу</a></li>
+  <li><a href="#sec-semantic-describe" id="toc-sec-semantic-describe" class="nav-link" data-scroll-target="#sec-semantic-describe"><span class="header-section-number">7.3</span> Описание сети</a></li>
+  <li><a href="#sec-semantic-ergm" id="toc-sec-semantic-ergm" class="nav-link" data-scroll-target="#sec-semantic-ergm"><span class="header-section-number">7.4</span> Модель образования связей</a></li>
+  <li><a href="#sec-semantic-ex" id="toc-sec-semantic-ex" class="nav-link" data-scroll-target="#sec-semantic-ex"><span class="header-section-number">7.5</span> Вопросы и упражнения</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-semantic" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Практикум: семантическая сеть</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>В последней главе мы пройдём все этапы сетевого анализа на одном примере: от сырых данных к сети, от сети к её описанию, от описания к модели. Данными будут тексты. Узлами станут слова, связями станут случаи, когда два слова стоят рядом. Такую сеть называют <em>семантической</em>. Она устроена так же, как сети из предыдущих глав. Меняется только природа узлов и связей. Поэтому все инструменты книги к ней применимы.</p>
+<p>Представим текст как последовательность слов A, B, C. Выберем <em>окно</em>: расстояние, на котором два слова считаются соседями. Если слово B оказалось в окне слова A, проведём между ними связь. Чем чаще пара встречается в тексте, тем больше вес связи. Основание метода простое: слова, которые часто стоят рядом, связаны по смыслу. В медицинских журналах рядом стоят «курение» и «болезни лёгких». В статьях о новой столице Казахстана рядом стоят «Астана» и «Назарбаев».</p>
+<p>В этой главе код показан полностью. Его можно выполнять по ходу чтения.</p>
+<section id="sec-corpus" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="sec-corpus"><span class="header-section-number">7.1</span> Корпус и разметка</h2>
+<p><em>Корпусом</em> называют набор текстов, которые мы анализируем. Наш корпус состоит из фрагментов четырёх англоязычных статей об Астане и Алматы. Они лежат в папке <code>data/articles</code>. Имя файла составлено из фамилии автора, года и ключевого слова. Основным примером будет статья Алимы Биссеновой о различиях между двумя городами <span class="citation" data-cites="bissenova2017">(<a href="references.html#ref-bissenova2017" role="doc-biblioref">Bissenova 2017 г.</a>)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(udpipe)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data/articles"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>texts <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">doc_id =</span> <span class="fu">basename</span>(files), <span class="at">text =</span> <span class="fu">map_chr</span>(files, read_file))</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Компьютер видит текст как строку символов. Прежде чем строить сеть, текст нужно <em>разметить</em>. Разметка включает три шага. <em>Токенизация</em> делит текст на токены: слова и знаки препинания. <em>Лемматизация</em> приводит каждое слово к начальной форме (лемме). Без неё «ученики», «учеников» и «ученикам» стали бы тремя разными узлами. <em>Определение частей речи</em> (part-of-speech tagging) помечает каждый токен как существительное, глагол, прилагательное и т. д.</p>
+<p>Все три шага выполняет пакет <strong>udpipe</strong> <span class="citation" data-cites="wijffels2023">(<a href="references.html#ref-wijffels2023" role="doc-biblioref">Wijffels 2023 г.</a>)</span> с помощью заранее обученной модели для английского языка. Модель хранится в папке <code>data</code>. Её можно скачать функцией <code>udpipe_download_model()</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">udpipe_load_model</span>(<span class="st">"data/english-ewt-ud-2.5-191206.udpipe"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ann <span class="ot">&lt;-</span> <span class="fu">udpipe_annotate</span>(model, texts<span class="sc">$</span>text, <span class="at">doc_id =</span> texts<span class="sc">$</span>doc_id) <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Результат представляет собой таблицу, в которой одна строка соответствует одному токену. Токены идут в порядке следования в тексте. В <a href="#tbl-annotation" class="quarto-xref">табл.&nbsp;<span>7.1</span></a> показано начало статьи Биссеновой. Столбец <code>upos</code> содержит часть речи: NOUN означает существительное, VERB глагол, ADJ прилагательное, PROPN имя собственное, ADP предлог, DET артикль.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-annotation" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-annotation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;7.1: Начало размеченного текста статьи Биссеновой
+</figcaption>
+<div aria-describedby="tbl-annotation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">token</th>
+<th style="text-align: left;">lemma</th>
+<th style="text-align: left;">upos</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">As</td>
+<td style="text-align: left;">as</td>
+<td style="text-align: left;">SCONJ</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">the</td>
+<td style="text-align: left;">the</td>
+<td style="text-align: left;">DET</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">seat</td>
+<td style="text-align: left;">seat</td>
+<td style="text-align: left;">NOUN</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">of</td>
+<td style="text-align: left;">of</td>
+<td style="text-align: left;">ADP</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">the</td>
+<td style="text-align: left;">the</td>
+<td style="text-align: left;">DET</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kazakh</td>
+<td style="text-align: left;">Kazakh</td>
+<td style="text-align: left;">PROPN</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">government</td>
+<td style="text-align: left;">government</td>
+<td style="text-align: left;">NOUN</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">and</td>
+<td style="text-align: left;">and</td>
+<td style="text-align: left;">CCONJ</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">a</td>
+<td style="text-align: left;">a</td>
+<td style="text-align: left;">DET</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Модель ошибается. На научных текстах ошибок немного. На расшифровках устной речи их больше. Модель может принять глагол за существительное или неверно восстановить лемму. Для учебного примера эти ошибки несущественны. В серьёзном исследовании результат разметки стоит выборочно проверить.</p>
+<p>Служебные части речи (предлоги, артикли, союзы) несут мало смысла. Оставим только существительные, прилагательные, глаголы и имена собственные. Леммы переведём в нижний регистр, чтобы «Almaty» в начале предложения не отличалось от «almaty» в середине. Заодно уберём знаки препинания, прилипшие к краям слов.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>words <span class="ot">&lt;-</span> ann <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(doc_id <span class="sc">==</span> <span class="st">"bissenova-2017-fortress.txt"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>         upos <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NOUN"</span>, <span class="st">"ADJ"</span>, <span class="st">"VERB"</span>, <span class="st">"PROPN"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">word =</span> <span class="fu">str_to_lower</span>(lemma),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">word =</span> <span class="fu">str_remove_all</span>(word, <span class="st">"^</span><span class="sc">\\</span><span class="st">W+|</span><span class="sc">\\</span><span class="st">W+$"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">!=</span> <span class="st">""</span>)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>После фильтрации в статье осталось 5843 слов. Этот шаг похож на удаление стоп-слов, но опирается на грамматику, а не на готовый список.</p>
+</section>
+<section id="sec-collocations" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="sec-collocations"><span class="header-section-number">7.2</span> От коллокаций к графу</h2>
+<p>Пару слов, которые встретились рядом, называют <em>коллокацией</em>. Главное решение здесь состоит в размере окна. Где кончается «рядом»? Одни считают соседями только слова, стоящие подряд. Другие считают соседями все слова одного предложения. Теоретически правильного ответа нет. Практический ответ состоит в том, чтобы попробовать несколько размеров окна и сравнить результаты. Мы возьмём самое узкое окно: соседями считаются слова, стоящие подряд после фильтрации. Функция <code>keywords_collocation()</code> считает такие пары и оставляет те, что встретились не меньше двух раз (<code>n_min = 2</code>).</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>coll <span class="ot">&lt;-</span> <span class="fu">keywords_collocation</span>(words, <span class="at">term =</span> <span class="st">"word"</span>, <span class="at">group =</span> <span class="st">"doc_id"</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">ngram_max =</span> <span class="dv">2</span>, <span class="at">n_min =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div id="tbl-collocations" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-collocations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;7.2: Самые частые коллокации в статье Биссеновой
+</figcaption>
+<div aria-describedby="tbl-collocations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">left</th>
+<th style="text-align: left;">right</th>
+<th style="text-align: right;">freq</th>
+<th style="text-align: right;">pmi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">alma</td>
+<td style="text-align: left;">ata</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">8,8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">kazakh</td>
+<td style="text-align: left;">language</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">4,8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">almaty</td>
+<td style="text-align: left;">astana</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">2,4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">soviet</td>
+<td style="text-align: left;">time</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">5,3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rural</td>
+<td style="text-align: left;">migrant</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">6,4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">urban</td>
+<td style="text-align: left;">space</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">5,6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">shala</td>
+<td style="text-align: left;">kazakh</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">4,9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cultural</td>
+<td style="text-align: left;">capital</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">4,5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Мы получили 114 коллокаций. Самые частые из них показаны в <a href="#tbl-collocations" class="quarto-xref">табл.&nbsp;<span>7.2</span></a>. Многие оказываются устойчивыми выражениями: «Alma-Ata» (старое название Алматы), «Soviet time», «urban space». Встречаются имена и географические названия из нескольких слов. Числа для udpipe тоже токены, поэтому пара «1970, 1980» из выражения «1970s and 1980s» тоже стала коллокацией.</p>
+<p>Столбец <code>pmi</code> содержит <em>точечную взаимную информацию</em> (pointwise mutual information):</p>
+<p><span class="math display">\[
+\text{PMI}(a, b) = \log_2 \frac{p(a, b)}{p(a)\, p(b)},
+\]</span></p>
+<p>где <span class="math inline">\(p(a, b)\)</span> означает долю пары среди всех пар, а <span class="math inline">\(p(a)\)</span> и <span class="math inline">\(p(b)\)</span> означают доли отдельных слов. Если бы слова располагались независимо друг от друга, доля пары равнялась бы произведению <span class="math inline">\(p(a)\, p(b)\)</span>. Дробь показывает, во сколько раз реальная доля пары больше этой ожидаемой доли. Запись <span class="math inline">\(\log_2\)</span> обозначает логарифм по основанию 2. Поэтому PMI, равный 1, означает, что пара встречается вдвое чаще случайного. PMI, равный 3, означает превышение в <span class="math inline">\(2^3 = 8\)</span> раз. Нулевой PMI означает, что слова соседствуют не чаще, чем при случайном расположении. Частая пара «almaty astana» имеет невысокий PMI: оба слова очень частые, поэтому их соседство отчасти случайно. Редкая пара с высоким PMI почти всегда является устойчивым выражением.</p>
+<p>Таблица коллокаций уже является списком связей: левое слово, правое слово и частота пары. Список узлов составят все слова, вошедшие хотя бы в одну коллокацию, вместе с частотой их употребления. Петли (слово рядом с самим собой) удалим. Пары «almaty astana» и «astana almaty» udpipe считает разными. Для нас это одна связь. Поэтому граф будет ненаправленным, а частоты двух порядков слов сложатся.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>freq <span class="ot">&lt;-</span> <span class="fu">count</span>(words, word)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> coll <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(left <span class="sc">!=</span> right) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(left, right, freq)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">word =</span> <span class="fu">unique</span>(<span class="fu">c</span>(edges<span class="sc">$</span>left, edges<span class="sc">$</span>right))) <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(freq, <span class="at">by =</span> <span class="st">"word"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>sem <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(edges, <span class="at">vertices =</span> nodes, <span class="at">directed =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">simplify</span>(<span class="at">edge.attr.comb =</span> <span class="st">"sum"</span>)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Семантическая сеть статьи содержит 123 слов и 110 связей. Атрибут узла <code>n</code> хранит частоту слова, атрибут связи <code>freq</code> хранит частоту пары.</p>
+</section>
+<section id="sec-semantic-describe" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="sec-semantic-describe"><span class="header-section-number">7.3</span> Описание сети</h2>
+<p>Нарисовать все 123 слов с подписями можно, но прочитать такой рисунок трудно. Распространённый приём состоит в том, чтобы оставить <em>костяк</em> сети: слова со степенью выше порога. На <a href="#fig-backbone" class="quarto-xref">рис.&nbsp;<span>7.1</span></a> оставлены слова, у которых больше двух соседей. Размер узла показывает частоту слова. Цвет показывает сообщество, о котором речь пойдёт ниже.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>backbone <span class="ot">&lt;-</span> <span class="fu">induced_subgraph</span>(sem, <span class="fu">V</span>(sem)[<span class="fu">degree</span>(sem) <span class="sc">&gt;</span> <span class="dv">2</span>])</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>comm <span class="ot">&lt;-</span> <span class="fu">cluster_fast_greedy</span>(sem, <span class="at">weights =</span> <span class="fu">E</span>(sem)<span class="sc">$</span>freq)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-backbone" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-backbone-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-semantic-networks_files/figure-html/fig-backbone-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-backbone-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;7.1: Костяк семантической сети статьи Биссеновой: слова, у которых больше двух соседей. Размер узла соответствует частоте слова, цвет соответствует сообществу
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Рисунок сразу показывает несколько тем. Вокруг «almaty» собраны слова о городской среде и культуре: «urban», «space», «culture», «creative». Отдельная группа описывает язык и происхождение: «kazakh», «russian», «speak», «shala». Слово «шала-казах» обозначает казахов, плохо говорящих по-казахски. Ещё одна группа связана с советским прошлым: «soviet», «time», «period», «late». Слово «astana» соединено с понятием столицы.</p>
+<section id="сообщества" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="сообщества"><span class="header-section-number">7.3.1</span> Сообщества</h3>
+<p>Темы на рисунке выделены не на глаз. Алгоритм поиска сообществ разбивает сеть на группы узлов, внутри которых связей много, а между которыми мало. Подробно сообщества и мера их качества (модулярность) разобраны в главе <a href="04-ties-and-groups.html" class="quarto-xref"><span>4</span></a>. Число найденных сообществ равно 31. Модулярность разбиения равна 0,76. Большинство сообществ состоит из двух слов: это устойчивые выражения или единичные упоминания. В <a href="#tbl-communities" class="quarto-xref">табл.&nbsp;<span>7.3</span></a> приведены пять самых крупных сообществ. Их естественно читать как темы текста.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-communities" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-communities-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;7.3: Пять крупнейших сообществ семантической сети. Слова упорядочены по частоте
+</figcaption>
+<div aria-describedby="tbl-communities-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 92%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Слов</th>
+<th style="text-align: left;">Самые частые слова</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">26</td>
+<td style="text-align: left;">city, almaty, astana, have, people, kazakhstan, centre</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">urban, culture, public, population, class, housing, space</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">kazakh, russian, call, language, speak, shala, division</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">soviet, time, period, same, former, late, union</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">cultural, capital, different, region, event, relocation, transfer</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="степени-и-посредничество" class="level3" data-number="7.3.2">
+<h3 data-number="7.3.2" class="anchored" data-anchor-id="степени-и-посредничество"><span class="header-section-number">7.3.2</span> Степени и посредничество</h3>
+<p>Распределение степеней очень неравномерно. У 88 слов из 123 ровно один сосед. У самых связанных слов, «city» и «almaty», соседей 18 и 11. Сеть полицентрична: несколько слов-хабов собирают вокруг себя остальные слова. Похоже устроена транспортная сеть страны с несколькими крупными аэропортами. Чтобы попасть из одного малого города в другой, приходится ехать через большие города.</p>
+<p>Центральность по посредничеству (глава <a href="03-centrality.html" class="quarto-xref"><span>3</span></a>) показывает, какие слова соединяют разные части текста. Выше всего она у слов «almaty», «city», «astana» и «capital». У большинства слов посредничество нулевое. Хороший пример даёт слово «city». Оно соединяет синонимы «dweller» и «resident». Синонимы рядом не стоят: автор пишет либо «city dweller», либо «city resident». Зато оба стоят рядом с «city».</p>
+<p>Это свойство полезно на практике. Если две группы людей употребляют одно слово в разных смыслах, вокруг слова образуются два несвязанных кластера. Само слово служит мостом между ними и получает высокое посредничество. Так можно сравнивать, например, язык официальных документов и язык интервью с жителями.</p>
+<p>Наконец, степень слова почти линейно растёт с частотой употребления. Чем чаще слово встречается, тем больше у него возможностей оказаться рядом с новыми словами.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>words_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">word =</span> <span class="fu">V</span>(sem)<span class="sc">$</span>name, <span class="at">n =</span> <span class="fu">V</span>(sem)<span class="sc">$</span>n, <span class="at">degree =</span> <span class="fu">degree</span>(sem))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(degree <span class="sc">~</span> <span class="fu">I</span>(n <span class="sc">/</span> <span class="dv">10</span>), <span class="at">data =</span> words_df)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Каждые десять употреблений добавляют слову в среднем 0,91 соседа. Частота объясняет 81% разброса степеней.</p>
+</section>
+</section>
+<section id="sec-semantic-ergm" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="sec-semantic-ergm"><span class="header-section-number">7.4</span> Модель образования связей</h2>
+<p>Описание показывает, <em>как</em> устроена сеть. Модель помогает понять, <em>какие процессы</em> могли её породить. Для этого служат экспоненциальные модели случайных графов, ERGM (глава <a href="06-ergm.html" class="quarto-xref"><span>6</span></a>). В сетях дружбы механизмы интуитивно понятны: люди отвечают взаимностью, дружат с похожими, знакомятся через общих друзей. Слова не выбирают соседей. Механизмы приходится продумать заново. Вот несколько кандидатов.</p>
+<ul>
+<li>Устойчивые выражения: «Soviet time», «urban space» всегда идут вместе.</li>
+<li>Имена людей и названия мест из нескольких слов.</li>
+<li>Определения при существительных. Прилагательное уточняет существительное, поэтому прилагательные чаще соседствуют с существительными, чем друг с другом.</li>
+<li>Частота. Слово, употреблённое двести раз, имеет больше шансов оказаться рядом с другим словом, чем слово, употреблённое дважды.</li>
+</ul>
+<p>Последний механизм проще всего проверить. Пакет <strong>ergm</strong> работает с объектами пакета <strong>network</strong>. Преобразуем граф функцией <code>asNetwork()</code> из пакета <strong>intergraph</strong>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ergm)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>net <span class="ot">&lt;-</span> intergraph<span class="sc">::</span><span class="fu">asNetwork</span>(sem)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(net <span class="sc">~</span> edges <span class="sc">+</span> <span class="fu">nodecov</span>(<span class="st">"n"</span>))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(net <span class="sc">~</span> edges <span class="sc">+</span> <span class="fu">nodecov</span>(<span class="st">"n"</span>) <span class="sc">+</span> <span class="fu">absdiff</span>(<span class="st">"n"</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(net <span class="sc">~</span> edges <span class="sc">+</span> <span class="fu">nodecov</span>(<span class="st">"n"</span>) <span class="sc">+</span> <span class="fu">absdiff</span>(<span class="st">"n"</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">gwdegree</span>(<span class="fl">0.69</span>, <span class="at">fixed =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>             <span class="fu">gwesp</span>(<span class="fl">0.69</span>, <span class="at">fixed =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>             <span class="fu">gwdsp</span>(<span class="fl">0.69</span>, <span class="at">fixed =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">seed =</span> <span class="dv">1312</span>, <span class="at">MCMC.burnin =</span> <span class="dv">50000</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">MCMC.interval =</span> <span class="dv">5000</span>, <span class="at">MCMC.samplesize =</span> <span class="dv">2000</span>))</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="частота-слова" class="level3" data-number="7.4.1">
+<h3 data-number="7.4.1" class="anchored" data-anchor-id="частота-слова"><span class="header-section-number">7.4.1</span> Частота слова</h3>
+<p>Модель 1 содержит два члена. Член <code>edges</code> играет роль свободного члена логистической регрессии. Он задаёт базовую вероятность связи. Член <code>nodecov("n")</code> добавляет к логарифму шансов связи между словами <span class="math inline">\(i\)</span> и <span class="math inline">\(j\)</span> слагаемое <span class="math inline">\(\theta (n_i + n_j)\)</span>, где <span class="math inline">\(n_i\)</span> означает частоту слова <span class="math inline">\(i\)</span>. Результаты всех моделей собраны в <a href="#tbl-ergm" class="quarto-xref">табл.&nbsp;<span>7.4</span></a>. Коэффициент при <code>edges</code> большой и отрицательный: сеть разреженная. Коэффициент при <code>nodecov.n</code> положительный: частые слова чаще связаны.</p>
+<p>Коэффициенты удобно перевести в вероятности. Для двух слов, каждое из которых встретилось 10 раз, вероятность связи равна <span class="math inline">\(\text{logit}^{-1}(-5{,}27 + 0{,}022 \cdot 20)
+\approx 0{,}8\%\)</span>. Для двух слов со 100 употреблениями каждое она равна 28%. Вывод ожидаемый. Модель с одной частотой служит отправной точкой.</p>
+</section>
+<section id="притягиваются-ли-частые-слова" class="level3" data-number="7.4.2">
+<h3 data-number="7.4.2" class="anchored" data-anchor-id="притягиваются-ли-частые-слова"><span class="header-section-number">7.4.2</span> Притягиваются ли частые слова</h3>
+<p>Модель 2 задаёт вопрос тоньше. Возможны два сценария. В первом текст состоит из нескольких тем. Каждая тема построена вокруг своего частого слова, но сами частые слова рядом не стоят. Во втором частые слова тянутся друг к другу. Член <code>absdiff("n")</code> добавляет слагаемое <span class="math inline">\(\theta\,|n_i - n_j|\)</span>: он реагирует на разницу частот в паре. Отрицательный коэффициент означает, что связь вероятнее между словами похожей частоты. Коэффициент получился отрицательным и маленьким (<span class="math inline">\(p = 0{,}04\)</span>).</p>
+<p>Прежде чем интерпретировать модель, нужно проверить, воспроизводит ли она сеть. Для этого из модели симулируют много сетей и сравнивают их с наблюдаемой по нескольким характеристикам (goodness of fit, GOF). Левая панель <a href="#fig-gof" class="quarto-xref">рис.&nbsp;<span>7.2</span></a> показывает результат для распределения степеней. Модель 2 ожидает заметную долю слов без соседей. В наблюдаемой сети таких слов нет совсем. Причина кроется в способе построения сети: узлами стали только слова, вошедшие хотя бы в одну коллокацию. Изолированных слов нет по построению. Модель, которая не знает об этом, неизбежно ошибается.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-gof" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-semantic-networks_files/figure-html/fig-gof-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;7.2: Проверка моделей по распределению степеней. Точки показывают наблюдаемую долю слов с данной степенью, ящики показывают доли в сетях, симулированных из модели
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="структура-связей" class="level3" data-number="7.4.3">
+<h3 data-number="7.4.3" class="anchored" data-anchor-id="структура-связей"><span class="header-section-number">7.4.3</span> Структура связей</h3>
+<p>Модель 3 добавляет три структурных члена. Подробно они разобраны в главе <a href="06-ergm.html" class="quarto-xref"><span>6</span></a>. Здесь достаточно их смысла. В отличие от первых двух моделей, модель 3 оценивается с помощью симуляций по методу Монте-Карло для марковских цепей (MCMC). Поэтому в коде заданы более длинные цепи, чем по умолчанию. С настройками по умолчанию оценка этой модели иногда останавливается с сообщением «MCMLE estimation stuck». Удлинение цепей обычно решает проблему.</p>
+<ul>
+<li><code>gwdegree</code> описывает форму распределения степеней.</li>
+<li><code>gwesp</code> описывает замыкание треугольников: связаны ли слова, у которых есть общий сосед.</li>
+<li><code>gwdsp</code> описывает число пар слов с общими соседями, независимо от того, связаны ли они сами.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div id="tbl-ergm" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ergm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;7.4: Три модели семантической сети. В скобках стандартные ошибки. Звёздочки: * p &lt; 0,05; ** p &lt; 0,01; *** p &lt; 0,001
+</figcaption>
+<div aria-describedby="tbl-ergm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Член</th>
+<th style="text-align: right;">Модель 1</th>
+<th style="text-align: right;">Модель 2</th>
+<th style="text-align: right;">Модель 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">edges</td>
+<td style="text-align: right;">−5,274*** (0,155)</td>
+<td style="text-align: right;">−5,339*** (0,159)</td>
+<td style="text-align: right;">−10,160*** (0,899)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nodecov.n</td>
+<td style="text-align: right;">0,022*** (0,002)</td>
+<td style="text-align: right;">0,028*** (0,004)</td>
+<td style="text-align: right;">0,075*** (0,011)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">absdiff.n</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">−0,009* (0,004)</td>
+<td style="text-align: right;">−0,004 (0,006)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gwdeg.fixed.0.69</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">4,011*** (0,707)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gwesp.fixed.0.69</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0,087 (0,199)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gwdsp.fixed.0.69</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">−0,322** (0,110)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AIC</td>
+<td style="text-align: right;">1012</td>
+<td style="text-align: right;">1010</td>
+<td style="text-align: right;">947</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>После добавления структурных членов разница частот перестаёт быть значимой (<span class="math inline">\(p = 0{,}54\)</span>). Её эффект объясняется другими процессами. Распределение степеней теперь воспроизводится хорошо (правая панель <a href="#fig-gof" class="quarto-xref">рис.&nbsp;<span>7.2</span></a>). AIC снизился с 1010 до 947.</p>
+<p>Коэффициенты структурных членов требуют осторожности. Положительный коэффициент при <code>gwdegree</code> часто ошибочно читают как «богатые богатеют». На деле он означает обратное: модель поощряет распределение связей по многим узлам и штрафует изолированные узлы <span class="citation" data-cites="levy2016">(<a href="references.html#ref-levy2016" role="doc-biblioref">Levy 2016 г.</a>)</span>. В нашей сети он прежде всего отражает отсутствие слов без соседей. Сосредоточенность связей на немногих хабах объясняет не <code>gwdegree</code>, а частота слова (<code>nodecov</code>). Коэффициент при <code>gwesp</code> незначим: если два слова стоят рядом с одним и тем же хабом, это не делает их соседями. Коэффициент при <code>gwdsp</code> отрицательный: пар слов с общими соседями меньше, чем предсказывали бы остальные члены модели. Редкие слова обычно привязаны к одному хабу, а не к нескольким сразу.</p>
+<p>Вместе результаты складываются в простую картину. Текст построен вокруг небольшого набора частых слов-хабов. Каждый хаб окружён вспомогательными словами. Вспомогательные слова между собой почти не связаны. Похоже устроена организация, в которой подчинённые общаются с начальником отдела, но не друг с другом.</p>
+<p>Анализ сетей не обязан заканчиваться моделью. ERGM относится к нишевым инструментам. Он популярен в академических исследованиях, когда нужно проверить гипотезы о механизмах образования связей. Для многих практических задач описательного анализа из предыдущих разделов достаточно.</p>
+</section>
+</section>
+<section id="sec-semantic-ex" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="sec-semantic-ex"><span class="header-section-number">7.5</span> Вопросы и упражнения</h2>
+<ol type="1">
+<li>Постройте семантическую сеть для другой статьи корпуса. Какие слова стали хабами? Совпадают ли темы, выделенные сообществами, с темами самой статьи?</li>
+<li>Расширьте окно: считайте соседями слова на расстоянии до трёх позиций. Подойдёт функция <code>cooccurrence()</code> из пакета udpipe с аргументом <code>skipgram</code>. Как изменились число связей, список хабов и модулярность?</li>
+<li>Объясните, почему слова «dweller» и «resident» связаны с «city», но не связаны между собой. Какую величину центральности это повышает у «city»?</li>
+<li>Подгоните модель 3 без члена <code>gwdegree</code> и сравните её распределение степеней с наблюдаемым. Как изменились AIC и коэффициент при <code>nodecov</code>?</li>
+<li>Как изменилась бы картина, если бы мы оставили служебные части речи? Какие слова стали бы хабами?</li>
+</ol>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-bissenova2017" class="csl-entry" role="listitem">
+Bissenova, Alima. 2017 г. <span>«The Fortress and the Frontier: Mobility, Culture, and Class in <span>Almaty</span> and <span>Astana</span>»</span>. <em>Europe-Asia Studies</em> 69 (4): 642‑667.
+</div>
+<div id="ref-levy2016" class="csl-entry" role="listitem">
+Levy, Michael A. 2016 г. <span>«gwdegree: Improving Interpretation of Geometrically-Weighted Degree Estimates in Exponential Random Graph Models»</span>. <em>Journal of Open Source Software</em> 1 (3): 36.
+</div>
+<div id="ref-wijffels2023" class="csl-entry" role="listitem">
+Wijffels, Jan. 2023 г. <em>udpipe: Tokenization, Parts of Speech Tagging, Lemmatization and Dependency Parsing with the UDPipe NLP Toolkit</em>. <a href="https://CRAN.R-project.org/package=udpipe">https://CRAN.R-project.org/package=udpipe</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Скопировано");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Скопировано");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./06-ergm.html" class="pagination-link" aria-label="Экспоненциальные модели случайных графов">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Экспоненциальные модели случайных графов</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link" aria-label="Литература">
+        <span class="nav-page-text">Литература</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Введение в анализ социальных сетей. Автор: Дархан Медеуов.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Эта книга составлена с помощью <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Центральность: Введение в анализ социальных сетей</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./04-ties-and-groups.html" rel="next">
+<link href="./02-graph-theory.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f2f553a25c8c443dad0d61a5c444ed52.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Поиск не дал результатов",
+    "search-matching-documents-text": "Результаты поиска",
+    "search-copy-link-title": "Скопировать ссылку",
+    "search-hide-matches-text": "Скрыть дополнительные результаты",
+    "search-more-match-text": "дополнительный результат в этом документе",
+    "search-more-matches-text": "дополнительных результата(-ов) в этом документе",
+    "search-clear-button-title": "Очистить",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Отменить",
+    "search-submit-button-title": "Найти",
+    "search-label": "Поиск"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Переключить боковую панель навигации" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-centrality.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Центральность</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Переключить боковую панель навигации" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Поиск" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Введение в анализ социальных сетей</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Переключить режим чтения">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Поиск"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Предисловие</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Словарь терминов</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Сети и графы</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-graph-theory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Элементы теории графов</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-centrality.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Центральность</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-ties-and-groups.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Взаимность, гомофилия, кластеризация</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-random-graphs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Случайные графы</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-ergm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Экспоненциальные модели случайных графов</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-semantic-networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Практикум: семантическая сеть</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Литература</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+<div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
+<p><a href="https://darkhanmedeuov.github.io/intro_sna_book/kk/" class="sidebar-lang-link">Қазақ тіліндегі нұсқасы</a></p>
+</div></div></nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Содержание</h2>
+   
+  <ul class="collapse">
+  <li><a href="#sec-position" id="toc-sec-position" class="nav-link active" data-scroll-target="#sec-position"><span class="header-section-number">3.1</span> Позиция узла в сети</a></li>
+  <li><a href="#sec-degree-centrality" id="toc-sec-degree-centrality" class="nav-link" data-scroll-target="#sec-degree-centrality"><span class="header-section-number">3.2</span> Центральность по степени</a></li>
+  <li><a href="#sec-closeness" id="toc-sec-closeness" class="nav-link" data-scroll-target="#sec-closeness"><span class="header-section-number">3.3</span> Центральность по близости</a></li>
+  <li><a href="#sec-betweenness" id="toc-sec-betweenness" class="nav-link" data-scroll-target="#sec-betweenness"><span class="header-section-number">3.4</span> Центральность по посредничеству</a></li>
+  <li><a href="#sec-eigenvector" id="toc-sec-eigenvector" class="nav-link" data-scroll-target="#sec-eigenvector"><span class="header-section-number">3.5</span> Центральность по собственному вектору</a></li>
+  <li><a href="#sec-compare-centrality" id="toc-sec-compare-centrality" class="nav-link" data-scroll-target="#sec-compare-centrality"><span class="header-section-number">3.6</span> Сравнение центральностей</a></li>
+  <li><a href="#sec-centrality-r" id="toc-sec-centrality-r" class="nav-link" data-scroll-target="#sec-centrality-r"><span class="header-section-number">3.7</span> В R</a></li>
+  <li><a href="#sec-centrality-ex" id="toc-sec-centrality-ex" class="nav-link" data-scroll-target="#sec-centrality-ex"><span class="header-section-number">3.8</span> Вопросы и упражнения</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-centrality" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Центральность</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Описывать сеть можно на нескольких уровнях. Глобальные характеристики относятся ко всей сети: распределение степеней, плотность, среднее расстояние. Паттерны сегрегации показывают, разделена ли сеть на группы похожих узлов. Локальные паттерны описывают небольшие фрагменты сети, например треугольники друзей. Наконец, можно описывать позиции отдельных узлов. Гомофилии и кластеризации посвящена глава <a href="04-ties-and-groups.html" class="quarto-xref"><span>4</span></a>. Эта глава посвящена позициям узлов. Характеристики позиций исторически называют <em>центральностями</em>.</p>
+<section id="sec-position" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="sec-position"><span class="header-section-number">3.1</span> Позиция узла в сети</h2>
+<p>Вернёмся к школьной сети на рис. <a href="02-graph-theory.html#fig-school-degree" class="quarto-xref"><span>2.1</span></a>. Какую позицию стоит занять, чтобы первым узнавать новости класса? Скорее всего, позицию ученика с большим числом друзей. Изолированная ученица новостей не узнает. А если по классу ходит грипп? Тогда, наоборот, выгоднее всего быть изолированным узлом: заразиться не от кого. На той же идее были построены карантинные меры во время пандемии ковида. Сокращение контактов снижает скорость распространения болезни.</p>
+<p>Пример показывает главное. Центральность всегда определяется по отношению к процессу, который идёт по сети. Одна и та же позиция выгодна для одного процесса и невыгодна для другого. Позиция узла может влиять на важные исходы. Экономисты изучали, как в деревнях южной Индии распространяется участие в программе микрокредитования <span class="citation" data-cites="banerjee2013">(<a href="references.html#ref-banerjee2013" role="doc-biblioref">Banerjee и др. 2013 г.</a>)</span>. Сначала они описали социальные связи во всех деревнях. Затем банк рассказывал о программе нескольким местным «лидерам». Программа распространилась шире там, где эти первые получатели информации занимали в сети более центральные позиции.</p>
+<p>Мер центральности придумано несколько десятков. Почти все они развивают одну из четырёх идей. Узел централен, если у него много связей (степень). Узел централен, если он близок ко всем остальным (близость). Узел централен, если через него проходят пути между другими узлами (посредничество). Наконец, узел централен, если центральны его соседи (влияние, или престиж).</p>
+</section>
+<section id="sec-degree-centrality" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="sec-degree-centrality"><span class="header-section-number">3.2</span> Центральность по степени</h2>
+<p>Самая простая мера центральности уже знакома нам по главе <a href="02-graph-theory.html" class="quarto-xref"><span>2</span></a>. <em>Центральность по степени</em> (degree centrality) равна степени узла: чем больше связей, тем центральнее узел. В направленной сети различают входящую и исходящую центральность по степени.</p>
+<p>Соседей узла <span class="math inline">\(i\)</span> в сети <span class="math inline">\(g\)</span> обозначают <span class="math inline">\(N_i(g) = \{j : (i, j) \in E\}\)</span>. Фигурные скобки задают множество, двоеточие внутри них читается «таких, что». Вся запись означает: множество таких узлов <span class="math inline">\(j\)</span>, что пара <span class="math inline">\((i, j)\)</span> принадлежит множеству связей. Степень равна числу соседей: <span class="math inline">\(d_i = |N_i(g)|\)</span>. Часто степень <em>нормализуют</em>, деля на <span class="math inline">\(N - 1\)</span>, наибольшее возможное число соседей. Нормализованная степень лежит между 0 и 1. Смысл нормализации тот же, что у процентов в опросах: она позволяет сравнивать сети разного размера. Десять друзей в классе из пятнадцати человек и в школе из тысячи означают разное.</p>
+<p>Классический пример даёт сеть брачных союзов знатных семей Флоренции XV века (<a href="#fig-florentine" class="quarto-xref">рис.&nbsp;<span>3.1</span></a>) <span class="citation" data-cites="padgett1993">(<a href="references.html#ref-padgett1993" role="doc-biblioref">Padgett и Ansell 1993 г.</a>)</span>. Брак в то время был финансовой и политической сделкой. Поэтому браки хорошо задокументированы. Историков давно интересовало, как Медичи, поначалу не самые богатые и влиятельные, пришли к власти. Сеть подсказывает часть ответа. У Медичи 6 брачных союзов, больше, чем у любой другой семьи.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-florentine" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-florentine-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-centrality_files/figure-html/fig-florentine-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-florentine-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;3.1: Брачные союзы флорентийских семей. Размер узла соответствует степени
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="почему-степени-недостаточно" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="почему-степени-недостаточно"><span class="header-section-number">3.2.1</span> Почему степени недостаточно</h3>
+<p>Степень учитывает только количество связей. Все связи для неё равноценны. Между тем связи бывают разного качества. Пусть город разделён рекой на два берега, а через реку перекинуты два-три моста. Если представить город сетью, мост окажется узлом всего с двумя связями. Однако без него сеть распадётся на две несвязанные части. Не случайно пробки скапливаются именно у мостов. Узлы в таких позициях называют посредниками, или брокерами (brokers).</p>
+<p>На <a href="#fig-hubs" class="quarto-xref">рис.&nbsp;<span>3.2</span></a> у трёх узлов C, T и U одинаковая степень: у каждого два соседа. Их позиции явно различаются. Узел C соединяет две большие группы. Без него сеть распалась бы. Его соседи A и B сами связаны со многими. Соседи узлов T и U связаны лишь с немногими. Степень этих различий не видит. Следующие меры центральности придуманы именно для них.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-hubs" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hubs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-centrality_files/figure-html/fig-hubs-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hubs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;3.2: Узлы C, T и U (выделены цветом) имеют одинаковую степень, но разные позиции
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-closeness" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="sec-closeness"><span class="header-section-number">3.3</span> Центральность по близости</h2>
+<p>Первая идея: центральный узел находится близко ко всем остальным. Возьмём узел <span class="math inline">\(i\)</span> и посчитаем расстояния <span class="math inline">\(dist(i, j)\)</span> от него до всех остальных <span class="math inline">\(N - 1\)</span> узлов (глава <a href="02-graph-theory.html" class="quarto-xref"><span>2</span></a>). Их среднее показывает, насколько узел удалён от остальной сети. Чем оно больше, тем узел периферийнее. Нам нужна величина, которая растёт вместе с центральностью. Поэтому берут обратную величину.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Определение">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Заметка</span>Определение
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>Центральностью по близости</em> (closeness centrality) узла <span class="math inline">\(i\)</span> называют величину, обратную среднему расстоянию от него до остальных узлов: <span class="math display">\[
+C^{clo}_i = \frac{N - 1}{\sum_{j \neq i} dist(i, j)}.
+\]</span></p>
+</div>
+</div>
+<p>В знаменателе стоит сумма расстояний от узла <span class="math inline">\(i\)</span> до остальных узлов. Запись <span class="math inline">\(j \neq i\)</span> под знаком суммы означает, что складываются расстояния до всех узлов <span class="math inline">\(j\)</span>, кроме самого <span class="math inline">\(i\)</span> (знак <span class="math inline">\(\neq\)</span> читается «не равно»). Числитель <span class="math inline">\(N - 1\)</span> равен числу этих узлов. Перевёрнутая дробь дала бы среднее расстояние. Наша дробь обратна ему. Чем ближе узел к остальным, тем меньше знаменатель и тем больше центральность. Наибольшее значение, единица, достигается у узла, связанного напрямую со всеми.</p>
+<p>Посчитаем близость для Асель в сети «Кайрат и Нуртас». Кайрат, Нуртас и Жанна находятся от неё на расстоянии 1, Арман на расстоянии 2. Сумма расстояний равна 5, поэтому <span class="math inline">\(C^{clo}_{\text{Асель}} = 4/5 = 0{,}8\)</span>. Для остальных узлов близость равна: Кайрат 0,57; Нуртас 0,57; Асель 0,80; Жанна 0,67; Арман 0,44. Степень Жанны такая же, как у Кайрата и Нуртаса. Близость у неё выше: Жанна соединяет Армана с остальными и поэтому ближе к каждому. Само по себе значение близости говорит мало. Смысл имеет сравнение узлов друг с другом.</p>
+<section id="недостижимые-узлы" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="недостижимые-узлы"><span class="header-section-number">3.3.1</span> Недостижимые узлы</h3>
+<p>Близость требует расстояний до всех узлов. А если какой-то узел недостижим? Во флорентийской сети у семьи Пуччи нет ни одного брачного союза. В школьной сети есть изолированная ученица. В направленной сети недостижимость встречается ещё чаще: у 7 учеников нет исходящих связей, поэтому по исходящим связям из них никуда не попасть.</p>
+<p>Возможных решений два. Первое: исключить недостижимые узлы из расчёта. Так по умолчанию поступает igraph: близость считается только по достижимым узлам, а для узлов без единого достижимого соседа не определена (<code>NaN</code>). Второе: считать расстояние до недостижимого узла бесконечным. Тогда его вклад в близость равен нулю. Эту идею точно выражает <em>гармоническая центральность</em>, которая усредняет не расстояния, а обратные к ним величины:</p>
+<p><span class="math display">\[
+H_i = \frac{1}{N - 1} \sum_{j \neq i} \frac{1}{dist(i, j)}, \qquad \frac{1}{\infty} = 0.
+\]</span></p>
+<p>Под знаком суммы теперь стоит не расстояние, а обратная ему величина. Сосед на расстоянии 1 даёт вклад 1, узел на расстоянии 2 даёт вклад <span class="math inline">\(1/2\)</span>, узел на расстоянии 3 даёт <span class="math inline">\(1/3\)</span>. Недостижимый узел находится на бесконечном расстоянии (знак <span class="math inline">\(\infty\)</span>). Его вклад равен нулю, что и записано справа. Множитель <span class="math inline">\(\frac{1}{N - 1}\)</span> превращает сумму в среднее по всем остальным узлам.</p>
+<p>Гармоническая центральность определена для любой сети. У изолированного узла она равна нулю.</p>
+</section>
+</section>
+<section id="sec-betweenness" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="sec-betweenness"><span class="header-section-number">3.4</span> Центральность по посредничеству</h2>
+<p>Вторая идея: центральный узел лежит на путях между другими узлами. Через такого посредника проходит информация. Он может её задержать или исказить.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Определение">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Заметка</span>Определение
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Пусть <span class="math inline">\(P(i, j)\)</span> означает число кратчайших путей между узлами <span class="math inline">\(i\)</span> и <span class="math inline">\(j\)</span>, а <span class="math inline">\(P_k(i, j)\)</span> означает число тех из них, что проходят через узел <span class="math inline">\(k\)</span>. <em>Центральностью по посредничеству</em> (betweenness centrality) узла <span class="math inline">\(k\)</span> называют <span class="math display">\[
+C^{btw}_k = \sum_{i \neq j,\; i, j \neq k} \frac{P_k(i, j)}{P(i, j)}.
+\]</span></p>
+</div>
+</div>
+<p>Сумма берётся по всем парам узлов <span class="math inline">\(i\)</span> и <span class="math inline">\(j\)</span>, отличных друг от друга и от самого узла <span class="math inline">\(k\)</span>: так читается запись под знаком суммы. Для каждой такой пары считается дробь. В знаменателе стоит число всех кратчайших путей между <span class="math inline">\(i\)</span> и <span class="math inline">\(j\)</span>, в числителе число тех из них, что проходят через <span class="math inline">\(k\)</span>. Нижний индекс <span class="math inline">\(k\)</span> у буквы <span class="math inline">\(P\)</span> в числителе напоминает об этом условии.</p>
+<p>Каждое слагаемое показывает, какую долю кратчайших путей между <span class="math inline">\(i\)</span> и <span class="math inline">\(j\)</span> контролирует <span class="math inline">\(k\)</span>. Если путь единственный и проходит через <span class="math inline">\(k\)</span>, слагаемое равно единице. Если из двух кратчайших путей через <span class="math inline">\(k\)</span> проходит один, слагаемое равно половине. Для нормализации сумму делят на число пар узлов, не включающих <span class="math inline">\(k\)</span>: <span class="math inline">\((N-1)(N-2)/2\)</span> в ненаправленной сети и <span class="math inline">\((N-1)(N-2)\)</span> в направленной <span class="citation" data-cites="freeman1977">(<a href="references.html#ref-freeman1977" role="doc-biblioref">Freeman 1977 г.</a>)</span>. В направленной сети кратчайшие пути идут только по стрелкам.</p>
+<p>В <a href="#tbl-bridge" class="quarto-xref">табл.&nbsp;<span>3.1</span></a> сравниваются три меры центральности для сети из девяти узлов на <a href="#fig-bridge" class="quarto-xref">рис.&nbsp;<span>3.3</span></a>. Две группы по четыре узла соединены через узел 5. Его степень минимальна. Близость и посредничество у него наибольшие: все пути между группами идут через него. Узлы 3 и 8 никогда не оказываются посредниками.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-bridge" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bridge-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-centrality_files/figure-html/fig-bridge-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bridge-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;3.3: Две группы узлов, соединённые через узел 5
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div id="tbl-bridge" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-bridge-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;3.1: Нормализованные центральности узлов сети на <a href="#fig-bridge" class="quarto-xref">рис.&nbsp;<span>3.3</span></a>
+</figcaption>
+<div aria-describedby="tbl-bridge-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Узел</th>
+<th style="text-align: right;">Степень</th>
+<th style="text-align: right;">Близость</th>
+<th style="text-align: right;">Посредничество</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">0,375</td>
+<td style="text-align: right;">0,381</td>
+<td style="text-align: right;">0,107</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">0,375</td>
+<td style="text-align: right;">0,381</td>
+<td style="text-align: right;">0,107</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: right;">0,250</td>
+<td style="text-align: right;">0,296</td>
+<td style="text-align: right;">0,000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: right;">0,375</td>
+<td style="text-align: right;">0,471</td>
+<td style="text-align: right;">0,536</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: right;">0,250</td>
+<td style="text-align: right;">0,500</td>
+<td style="text-align: right;">0,571</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: right;">0,375</td>
+<td style="text-align: right;">0,471</td>
+<td style="text-align: right;">0,536</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: right;">0,375</td>
+<td style="text-align: right;">0,381</td>
+<td style="text-align: right;">0,107</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">8</td>
+<td style="text-align: right;">0,250</td>
+<td style="text-align: right;">0,296</td>
+<td style="text-align: right;">0,000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">9</td>
+<td style="text-align: right;">0,375</td>
+<td style="text-align: right;">0,381</td>
+<td style="text-align: right;">0,107</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Во флорентийской сети посредничество Медичи равно 0,45. У следующей по этому показателю семьи оно вдвое меньше. Медичи связывали между собой семьи, которые иначе не были бы связаны. В этом историки видят один из источников их силы.</p>
+<p>Посредничество особенно полезно там, где степень вводит в заблуждение. В одном исследовании трудовой мобильности в Казахстане сеть строилась по переходам работников между регионами. Наибольшая степень оказалась у центральных районов Астаны и Алматы: туда приезжают работать отовсюду. Наибольшее посредничество получили региональные центры вроде Семея и Усть-Каменогорска. Многие сначала находят работу в ближайшем региональном центре, а уже потом в столице. Столицы служат конечными точками маршрутов. Региональные центры служат пересадочными станциями.</p>
+</section>
+<section id="sec-eigenvector" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="sec-eigenvector"><span class="header-section-number">3.5</span> Центральность по собственному вектору</h2>
+<p>Третья идея: важно не только число друзей, но и то, насколько важны сами друзья. На <a href="#fig-hubs" class="quarto-xref">рис.&nbsp;<span>3.2</span></a> узел C связан с двумя хабами, у которых шесть и пять соседей. Узел T связан с двумя узлами, у которых по два соседа. Через своих соседей C может дотянуться до гораздо большей части сети.</p>
+<p>Формализуем идею: центральность узла пропорциональна сумме центральностей его соседей,</p>
+<p><span id="eq-eigen"><span class="math display">\[
+c_i = k \sum_{j=1}^{N} a_{ij} c_j,
+\tag{3.1}\]</span></span></p>
+<p>где <span class="math inline">\(a_{ij}\)</span> означает элемент матрицы смежности, а <span class="math inline">\(k\)</span> означает некоторую постоянную.</p>
+<p>Сумма здесь берётся по всем узлам <span class="math inline">\(j\)</span>. Однако элемент <span class="math inline">\(a_{ij}\)</span> равен единице только для соседей узла <span class="math inline">\(i\)</span>, для остальных узлов он равен нулю. Поэтому в сумме остаются лишь центральности соседей. Например, у Асель три соседа. Для неё формула даёт <span class="math inline">\(c_{\text{Асель}} = k\,(c_{\text{Кайрат}} + c_{\text{Нуртас}} + c_{\text{Жанна}})\)</span>.</p>
+<p>Определение выглядит круговым: центральность узла выражается через центральности соседей. Однако такие уравнения, записанные для всех узлов, образуют систему из <span class="math inline">\(N\)</span> линейных уравнений. В матричной форме она выглядит так:</p>
+<p><span class="math display">\[
+\mathbf c = k A \mathbf c.
+\]</span></p>
+<p>Жирная буква <span class="math inline">\(\mathbf c\)</span> обозначает вектор: столбец из центральностей всех <span class="math inline">\(N\)</span> узлов. Буква <span class="math inline">\(A\)</span> обозначает матрицу смежности. Произведение <span class="math inline">\(A \mathbf c\)</span> даёт новый столбец. В его строке <span class="math inline">\(i\)</span> стоит сумма <span class="math inline">\(\sum_j a_{ij} c_j\)</span>, то есть сумма центральностей соседей узла <span class="math inline">\(i\)</span>. Равенство утверждает: если этот столбец умножить на число <span class="math inline">\(k\)</span>, получится исходный столбец центральностей.</p>
+<p>Вектор, который после умножения на матрицу переходит в себя с точностью до множителя, называется <em>собственным вектором</em> (eigenvector) матрицы. Отсюда название меры: <em>центральность по собственному вектору</em> <span class="citation" data-cites="bonacich1987">(<a href="references.html#ref-bonacich1987" role="doc-biblioref">Bonacich 1987 г.</a>)</span>. У матрицы <span class="math inline">\(N \times N\)</span> может быть до <span class="math inline">\(N\)</span> собственных векторов. В качестве центральности берут вектор, соответствующий наибольшему собственному числу. Все его элементы неотрицательны. Обычно его нормируют так, чтобы наибольший элемент был равен единице.</p>
+<p>В сети на <a href="#fig-hubs" class="quarto-xref">рис.&nbsp;<span>3.2</span></a> центральность узла C равна 0,60, узла T равна 0,37, узла U равна 0,23. Степени у всех трёх одинаковые. Во флорентийской сети Медичи снова на первом месте.</p>
+<p>У центральности по собственному вектору есть наглядный смысл. <em>Маршрутом</em> называют последовательность связей, в которой узлы могут повторяться. Элемент матрицы <span class="math inline">\(A^2\)</span> в строке <span class="math inline">\(i\)</span> и столбце <span class="math inline">\(j\)</span> равен числу маршрутов длины 2 из <span class="math inline">\(i\)</span> в <span class="math inline">\(j\)</span>. Элемент <span class="math inline">\(A^3\)</span> считает маршруты длины 3 и т. д. Посчитаем для каждого узла число маршрутов длины <span class="math inline">\(m\)</span>, которые из него начинаются. С ростом <span class="math inline">\(m\)</span> эти числа становятся пропорциональны центральности по собственному вектору. Центральный узел служит началом множества длинных маршрутов по сети.</p>
+<p>Для направленных сетей эта мера ведёт себя плохо: узлы без входящих связей получают нулевую центральность и обнуляют тех, на кого указывают. Поэтому её считают по ненаправленной версии сети либо используют вариант для направленных сетей. Самый известный такой вариант, PageRank, лежал в основе поисковой системы Google <span class="citation" data-cites="brin1998">(<a href="references.html#ref-brin1998" role="doc-biblioref">Brin и Page 1998 г.</a>)</span>. Важность страницы складывается из важности ссылающихся на неё страниц. PageRank равен доле времени, которую «случайный серфер» проводит на странице, если он щёлкает по случайным ссылкам и время от времени переходит на случайную страницу.</p>
+<p>Вернёмся к деревням Индии. Участие в программе предсказывала именно центральность первых получателей информации по собственному вектору (и родственная ей мера). Число их связей предсказывало его хуже <span class="citation" data-cites="banerjee2013">(<a href="references.html#ref-banerjee2013" role="doc-biblioref">Banerjee и др. 2013 г.</a>)</span>.</p>
+</section>
+<section id="sec-compare-centrality" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="sec-compare-centrality"><span class="header-section-number">3.6</span> Сравнение центральностей</h2>
+<p>Разные меры описывают разные стороны позиции узла. Насколько они согласуются, зависит от устройства сети. В <a href="#tbl-cor" class="quarto-xref">табл.&nbsp;<span>3.2</span></a> приведены корреляции между мерами центральности для школьной сети. Входящая степень сильно связана с PageRank и посредничеством. Исходящая близость почти не связана ни с чем: то, насколько близким ученик сам считает класс, мало говорит о его популярности.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-cor" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cor-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;3.2: Корреляции мер центральности в школьной сети (по ученикам, для которых определены все меры)
+</figcaption>
+<div aria-describedby="tbl-cor-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Вх. ст.</th>
+<th style="text-align: right;">Вх. бл.</th>
+<th style="text-align: right;">Исх. бл.</th>
+<th style="text-align: right;">Поср.</th>
+<th style="text-align: right;">Соб. в.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Входящая близость</td>
+<td style="text-align: right;">0,77</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Исходящая близость</td>
+<td style="text-align: right;">0,19</td>
+<td style="text-align: right;">0,04</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Посредничество</td>
+<td style="text-align: right;">0,69</td>
+<td style="text-align: right;">0,69</td>
+<td style="text-align: right;">0,17</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Собственный вектор</td>
+<td style="text-align: right;">0,75</td>
+<td style="text-align: right;">0,60</td>
+<td style="text-align: right;">0,30</td>
+<td style="text-align: right;">0,51</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PageRank</td>
+<td style="text-align: right;">0,91</td>
+<td style="text-align: right;">0,77</td>
+<td style="text-align: right;">0,09</td>
+<td style="text-align: right;">0,85</td>
+<td style="text-align: right;">0,59</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Наибольшее посредничество в классе у ученицы с номером 155 (<a href="#fig-school-btw" class="quarto-xref">рис.&nbsp;<span>3.4</span></a>). Она дружит с людьми из разных компаний и связывает их между собой. Если такой человек уходит, компания распадается на островки.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-school-btw" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-school-btw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-centrality_files/figure-html/fig-school-btw-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:95.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-school-btw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;3.4: Школьная сеть. Размер узла соответствует центральности по посредничеству
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Центральности можно сравнивать между группами узлов так же, как любые другие переменные. Средняя исходящая близость у девушек равна 0,41, у юношей 0,26. С точки зрения девушек класс теснее: их друзья сами называют много друзей. Входящая близость у тех и других почти одинакова (0,33 и 0,36). Одноклассники воспринимают юношей не более далёкими, чем девушек. Центральность по собственному вектору у юношей заметно ниже (0,36 против 0,38). Юноши замкнуты в небольшой группе. Среди девушек много связанных с разными компаниями.</p>
+<p>Такие сравнения описательны. Они порождают гипотезы, но не проверяют их: класс мал, а наблюдения в сети зависимы. Как проверять гипотезы о сетях, рассказано в главе <a href="06-ergm.html" class="quarto-xref"><span>6</span></a>.</p>
+</section>
+<section id="sec-centrality-r" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="sec-centrality-r"><span class="header-section-number">3.7</span> В R</h2>
+<p>Все меры центральности из этой главы есть в igraph. Аргумент <code>normalized = TRUE</code> включает нормализацию, аргумент <code>mode</code> выбирает направление связей:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">degree</span>(school, <span class="at">mode =</span> <span class="st">"in"</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">closeness</span>(school, <span class="at">mode =</span> <span class="st">"out"</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)  <span class="co"># NaN без достижимых узлов</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">harmonic_centrality</span>(school, <span class="at">mode =</span> <span class="st">"out"</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">betweenness</span>(school, <span class="at">normalized =</span> <span class="cn">TRUE</span>)              <span class="co"># учитывает направление</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">eigen_centrality</span>(<span class="fu">as_undirected</span>(school))<span class="sc">$</span>vector      <span class="co"># результат в $vector</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">page_rank</span>(school)<span class="sc">$</span>vector</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Функция <code>distances()</code> по умолчанию игнорирует направление связей. Чтобы учесть его, нужен аргумент <code>mode = "out"</code> или <code>mode = "in"</code>. Недостижимым парам соответствует значение <code>Inf</code>.</p>
+<p>Центральности удобно собрать в таблицу, присоединить к атрибутам узлов и дальше работать с ними обычными средствами:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cent <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">as_data_frame</span>(school, <span class="at">what =</span> <span class="st">"vertices"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">btw =</span> <span class="fu">betweenness</span>(school, <span class="at">normalized =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">cout =</span> <span class="fu">closeness</span>(school, <span class="at">mode =</span> <span class="st">"out"</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>cent <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(sex) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">c</span>(btw, cout), <span class="sc">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(cent<span class="sc">$</span>btw, cent<span class="sc">$</span>cout, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="sec-centrality-ex" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="sec-centrality-ex"><span class="header-section-number">3.8</span> Вопросы и упражнения</h2>
+<ol type="1">
+<li>Посчитайте вручную близость и посредничество всех узлов сети «Кайрат и Нуртас». Какой узел центральнее всех по каждой мере?</li>
+<li>Придумайте сеть, в которой узел с наибольшей степенью имеет нулевое посредничество.</li>
+<li>Почему нормализующий множитель посредничества в ненаправленной сети равен <span class="math inline">\((N-1)(N-2)/2\)</span>?</li>
+<li>Каким учеником лучше быть, чтобы быстро распространить по классу новость? А чтобы узнать её первым? Какие меры центральности отвечают на эти вопросы?</li>
+<li>Возведите в квадрат матрицу смежности сети «Кайрат и Нуртас». Что означают числа на диагонали полученной матрицы?</li>
+</ol>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-banerjee2013" class="csl-entry" role="listitem">
+Banerjee, Abhijit, Arun G. Chandrasekhar, Esther Duflo и Matthew O. Jackson. 2013 г. <span>«The Diffusion of Microfinance»</span>. <em>Science</em> 341 (6144): 1236498.
+</div>
+<div id="ref-bonacich1987" class="csl-entry" role="listitem">
+Bonacich, Phillip. 1987 г. <span>«Power and Centrality: A Family of Measures»</span>. <em>American Journal of Sociology</em> 92 (5): 1170‑1182.
+</div>
+<div id="ref-brin1998" class="csl-entry" role="listitem">
+Brin, Sergey и Lawrence Page. 1998 г. <span>«The Anatomy of a Large-Scale Hypertextual Web Search Engine»</span>. <em>Computer Networks and ISDN Systems</em> 30 (1-7): 107‑117.
+</div>
+<div id="ref-freeman1977" class="csl-entry" role="listitem">
+Freeman, Linton C. 1977 г. <span>«A Set of Measures of Centrality Based on Betweenness»</span>. <em>Sociometry</em> 40 (1): 35‑41.
+</div>
+<div id="ref-padgett1993" class="csl-entry" role="listitem">
+Padgett, John F. и Christopher K. Ansell. 1993 г. <span>«Robust Action and the Rise of the <span>Medici</span>, 1400-1434»</span>. <em>American Journal of Sociology</em> 98 (6): 1259‑1319.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Скопировано");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Скопировано");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./02-graph-theory.html" class="pagination-link" aria-label="Элементы теории графов">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Элементы теории графов</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./04-ties-and-groups.html" class="pagination-link" aria-label="Взаимность, гомофилия, кластеризация">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Взаимность, гомофилия, кластеризация</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Введение в анализ социальных сетей. Автор: Дархан Медеуов.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Эта книга составлена с помощью <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

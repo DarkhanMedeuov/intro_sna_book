@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; Сети и графы: Введение в анализ социальных сетей</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./02-graph-theory.html" rel="next">
+<link href="./glossary.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f2f553a25c8c443dad0d61a5c444ed52.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Поиск не дал результатов",
+    "search-matching-documents-text": "Результаты поиска",
+    "search-copy-link-title": "Скопировать ссылку",
+    "search-hide-matches-text": "Скрыть дополнительные результаты",
+    "search-more-match-text": "дополнительный результат в этом документе",
+    "search-more-matches-text": "дополнительных результата(-ов) в этом документе",
+    "search-clear-button-title": "Очистить",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Отменить",
+    "search-submit-button-title": "Найти",
+    "search-label": "Поиск"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Переключить боковую панель навигации" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-networks.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Сети и графы</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Переключить боковую панель навигации" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Поиск" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Введение в анализ социальных сетей</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Переключить режим чтения">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Поиск"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Предисловие</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Словарь терминов</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-networks.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Сети и графы</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-graph-theory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Элементы теории графов</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-centrality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Центральность</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-ties-and-groups.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Взаимность, гомофилия, кластеризация</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-random-graphs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Случайные графы</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-ergm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Экспоненциальные модели случайных графов</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-semantic-networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Практикум: семантическая сеть</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Литература</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+<div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
+<p><a href="https://darkhanmedeuov.github.io/intro_sna_book/kk/" class="sidebar-lang-link">Қазақ тіліндегі нұсқасы</a></p>
+</div></div></nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Содержание</h2>
+   
+  <ul class="collapse">
+  <li><a href="#sec-social" id="toc-sec-social" class="nav-link active" data-scroll-target="#sec-social"><span class="header-section-number">1.1</span> Что делает сеть социальной</a></li>
+  <li><a href="#sec-graphs" id="toc-sec-graphs" class="nav-link" data-scroll-target="#sec-graphs"><span class="header-section-number">1.2</span> Сети вокруг нас и теория графов</a></li>
+  <li><a href="#sec-records" id="toc-sec-records" class="nav-link" data-scroll-target="#sec-records"><span class="header-section-number">1.3</span> Способы записи сетей</a></li>
+  <li><a href="#sec-directed-weighted" id="toc-sec-directed-weighted" class="nav-link" data-scroll-target="#sec-directed-weighted"><span class="header-section-number">1.4</span> Направленные и взвешенные сети</a></li>
+  <li><a href="#sec-bipartite" id="toc-sec-bipartite" class="nav-link" data-scroll-target="#sec-bipartite"><span class="header-section-number">1.5</span> Двудольные сети</a></li>
+  <li><a href="#sec-types" id="toc-sec-types" class="nav-link" data-scroll-target="#sec-types"><span class="header-section-number">1.6</span> Типы сетей</a></li>
+  <li><a href="#sec-networks-r" id="toc-sec-networks-r" class="nav-link" data-scroll-target="#sec-networks-r"><span class="header-section-number">1.7</span> В R</a></li>
+  <li><a href="#sec-networks-ex" id="toc-sec-networks-ex" class="nav-link" data-scroll-target="#sec-networks-ex"><span class="header-section-number">1.8</span> Вопросы и упражнения</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-networks" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Сети и графы</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Эта глава вводит основной объект книги. Мы начнём с житейского представления о социальной сети и постепенно придём к её строгой записи на языке теории графов. Затем разберём, какими бывают сети: направленными и ненаправленными, бинарными и взвешенными, однодольными и двудольными. Этих различий достаточно, чтобы описать почти любую сеть, с которой работает социолог.</p>
+<section id="sec-social" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="sec-social"><span class="header-section-number">1.1</span> Что делает сеть социальной</h2>
+<p>Сегодня словосочетание «социальная сеть» вызывает в памяти Facebook, Instagram или ВКонтакте. Что делает такую платформу социальной? Первым приходит в голову общение: с друзьями можно поддерживать связь, через друзей можно знакомиться с новыми людьми. Если посмотреть на платформу структурно, она состоит из двух частей. Первая часть представляет собой множество личных страниц. Вторая часть представляет собой множество связей между страницами: дружба выражена ссылкой со страницы на страницу. Аккаунтов на платформе миллионы. Каждый пользователь при этом связан лишь с очень небольшой их долей. Главное структурное свойство здесь <em>связанность</em>: кто с кем соединён.</p>
+<p>Термин гораздо старше интернета. Его ввели антропологи, изучавшие структуры родства. Сначала исследователи расспрашивали членов сообщества о том, кто кому приходится родственником. Потом выяснилось, что помимо родства людей связывает множество других отношений: дружба, совет, взаимопомощь, совместная работа. Из антропологии понятие перешло в социологию, политологию и экономику.</p>
+<p>Отношения в небольшой группе удобно изобразить рисунком. Люди обозначаются кружками, отношения обозначаются линиями между кружками. На <a href="#fig-toy" class="quarto-xref">рис.&nbsp;<span>1.1</span></a> показана придуманная, но правдоподобная компания из пяти человек. Кайрат, Нуртас и Асель дружат друг с другом и образуют тесный круг. Жанна дружит только с Асель. Арман дружит только с Жанной. Он находится дальше всех от тройки друзей.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-toy" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-toy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-networks_files/figure-html/fig-toy-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-toy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;1.1: Сеть «Кайрат и Нуртас»: пять человек и пять дружеских связей
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Определение">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Заметка</span>Определение
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>Социальной сетью</em> называют множество людей вместе с множеством отношений между ними.</p>
+</div>
+</div>
+<p>Под отношениями можно понимать очень разные вещи: родство, дружбу, обмен советами, переписку, совместную работу. Выбор отношения задаёт исследовательский вопрос. Одна и та же группа людей образует разные сети дружбы, переписки или родства.</p>
+</section>
+<section id="sec-graphs" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="sec-graphs"><span class="header-section-number">1.2</span> Сети вокруг нас и теория графов</h2>
+<p>Та же логика применима не только к людям. Электрическая сеть состоит из электростанций и городов, соединённых линиями передач. Компьютерная сеть состоит из компьютеров, соединённых проводами. Транспортную сеть города можно представить как множество остановок, между которыми ходят автобусы. Фирмы заключают друг с другом контракты на поставку товаров. Список легко продолжить.</p>
+<p>У всех этих примеров общая структура. Есть множество объектов. Есть множество связей между объектами. Каждую связь можно записать как пару объектов: «Кайрат, Нуртас» для дружбы или «Астана, Павлодар» для прямого железнодорожного сообщения. Общая структура даёт общий язык. На этом языке можно говорить о дружбе школьников и о железных дорогах одними и теми же словами. Он позволяет увидеть общие черты очень разных систем либо понять, чем именно они различаются.</p>
+<p>Этот язык называется <em>теорией графов</em>. Граф представляет собой множество точек, соединённых множеством линий. В книге мы возьмём из теории графов ровно то, что нужно для описания сетей: понятия, обозначения и несколько простых результатов.</p>
+<section id="узлы-и-связи" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="узлы-и-связи"><span class="header-section-number">1.2.1</span> Узлы и связи</h3>
+<p>Объекты, из которых состоит сеть, мы будем называть <em>узлами</em> (nodes). В теории графов их называют вершинами (vertices). В социологии их часто называют <em>акторами</em> (actors), подчёркивая, что это сущности, способные действовать. Узел играет ту же роль, что наблюдение в классической статистике: это единица анализа. Если нас интересуют люди, узлами будут люди. Если нас интересуют международные отношения, узлами будут государства. Узлами могут быть также организации, города, компьютеры или белки.</p>
+<p>Отношение между двумя узлами мы будем называть <em>связью</em> (tie). В литературе встречаются синонимы: ребро (edge), дуга (arc), звено (link).</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Определение">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Заметка</span>Определение
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>Граф</em> <span class="math inline">\(G = (V, E)\)</span> задаётся множеством узлов <span class="math inline">\(V\)</span> и множеством связей <span class="math inline">\(E\)</span>. Каждая связь представляет собой пару узлов <span class="math inline">\((i, j)\)</span>.</p>
+</div>
+</div>
+<p>Обозначения происходят от английских слов vertex (вершина) и edge (ребро). Сеть «Кайрат и Нуртас» содержит пять узлов <span class="math inline">\(V = \{\text{Кайрат}, \text{Нуртас},
+\text{Асель}, \text{Жанна}, \text{Арман}\}\)</span> и пять связей.</p>
+<p>Запись <span class="math inline">\(G = (V, E)\)</span> читается так: граф <span class="math inline">\(G\)</span> состоит из двух частей, множества узлов <span class="math inline">\(V\)</span> и множества связей <span class="math inline">\(E\)</span>. Фигурные скобки перечисляют элементы множества, как в записи множества <span class="math inline">\(V\)</span> выше. Круглые скобки в записи <span class="math inline">\((i, j)\)</span> обозначают пару: связь соединяет узел <span class="math inline">\(i\)</span> с узлом <span class="math inline">\(j\)</span>.</p>
+<p>Связи можно приписать число. Удобно описать отношение функцией <span class="math inline">\(w\)</span>, которая каждой паре узлов ставит в соответствие значение. В простейшем случае отношение бинарно: связь либо есть, либо её нет. Тогда <span class="math inline">\(w: V \times V \to \{0, 1\}\)</span>. Два человека либо друзья, либо нет. Бывают отношения с градациями. Число писем, которые один сотрудник отправил другому за месяц, является целым неотрицательным числом: <span class="math inline">\(w: V \times V \to \mathbb{Z}_{\geq 0}\)</span>. В самом общем случае значение может быть любым вещественным числом: <span class="math inline">\(w: V \times V \to \mathbb{R}\)</span>.</p>
+<p>Такие записи читаются слева направо. Запись <span class="math inline">\(w: V \times V \to \{0, 1\}\)</span> означает, что функция <span class="math inline">\(w\)</span> берёт пару узлов и возвращает 0 или 1. Знак <span class="math inline">\(\times\)</span> между двумя <span class="math inline">\(V\)</span> говорит, что на вход подаётся пара: первый узел из <span class="math inline">\(V\)</span>, второй тоже из <span class="math inline">\(V\)</span>. Стрелка указывает, какие значения функция может выдать. Буквой <span class="math inline">\(\mathbb{Z}_{\geq 0}\)</span> обозначают целые неотрицательные числа 0, 1, 2, 3 и т. д. Буквой <span class="math inline">\(\mathbb{R}\)</span> обозначают все вещественные числа, в том числе дробные.</p>
+</section>
+<section id="sec-karate" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="sec-karate"><span class="header-section-number">1.2.2</span> Карате-клуб Закари</h3>
+<p>В 1970-х годах американский антрополог Уэйн Закари наблюдал за отношениями в университетском карате-клубе <span class="citation" data-cites="zachary1977">(<a href="references.html#ref-zachary1977" role="doc-biblioref">Zachary 1977 г.</a>)</span>. Эта сеть стала классической. На <a href="#fig-karate" class="quarto-xref">рис.&nbsp;<span>1.2</span></a> показаны 34 члена клуба и 78 связей между ними. Прежде чем читать её историю, полезно присмотреться к самой структуре.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-karate" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-karate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-networks_files/figure-html/fig-karate-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-karate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;1.2: Сеть карате-клуба Закари. Цвет показывает, кого поддержал член клуба после раскола
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Бросаются в глаза три особенности. Во-первых, связи распределены неравномерно. У двух членов клуба 16 и 17 связей, а у многих других всего одна или две. Сосредоточенность связей вокруг немногих узлов называют <em>централизацией</em>. Во-вторых, сеть распадается на две группы. Внутри групп связей много, между группами мало. У централизации здесь два центра. В-третьих, у нескольких человек есть связи в обеих группах. Они играют роль посредников.</p>
+<p>Такую картину могли бы породить разные ситуации. Например, организация из двух отделов, в каждом из которых сотрудники общаются со своим начальником и друг с другом. Или клуб с двумя тренерами, у каждого из которых свои ученики. На самом деле в клубе произошёл конфликт между президентом (в работе Закари он назван Джоном А.) и главным тренером (Мистером Хаем). Клуб раскололся на два. Каждый член клуба выбрал одну из сторон. Слабые связи между группами отражают этот выбор: общение с «чужой» стороной могло восприниматься как нелояльность.</p>
+<p>Данные почти всегда совместимы с несколькими объяснениями. Пример показывает главное: структура отношений в сообществе многое говорит о социальных процессах внутри него. На этой идее построена вся книга.</p>
+</section>
+<section id="sec-konigsberg" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="sec-konigsberg"><span class="header-section-number">1.2.3</span> Мосты Кёнигсберга</h3>
+<p>О большинстве математических теорий нельзя сказать, где и когда они появились. Теория графов составляет исключение. Кёнигсберг (ныне Калининград) был богатым торговым городом Восточной Пруссии. Река Прегель делила его на два берега и два острова. Участки суши соединяли семь мостов. Горожане спрашивали: можно ли прогуляться по городу так, чтобы пройти по каждому мосту ровно один раз?</p>
+<p>В 1735 году Леонард Эйлер доказал, что такого маршрута нет <span class="citation" data-cites="euler1741">(<a href="references.html#ref-euler1741" role="doc-biblioref">Euler 1741 г.</a>)</span>. Для этого он отбросил всё несущественное: форму берегов, длину мостов, улицы. Каждый участок суши он заменил точкой, каждый мост заменил линией (<a href="#fig-konigsberg" class="quarto-xref">рис.&nbsp;<span>1.3</span></a>). Между двумя точками здесь бывает несколько линий. Граф с такими кратными связями называют мультиграфом.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-konigsberg" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-konigsberg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-networks_files/figure-html/fig-konigsberg-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:55.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-konigsberg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;1.3: Мосты Кёнигсберга в виде графа. Узлы A и D обозначают острова, B и C обозначают берега. В скобках указано число мостов
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Аргумент Эйлера прост. Пусть путник проходит через участок суши, не начиная и не заканчивая на нём маршрут. Тогда он входит на участок по одному мосту и уходит по другому. Каждый визит расходует два моста. Значит, у всех участков, кроме начального и конечного, число мостов должно быть чётным. В Кёнигсберге нечётное число мостов у всех четырёх участков: 5, 3, 3 и 3. Следовательно, маршрута нет. Число связей у узла называют его степенью. Это понятие станет главным в главе <a href="02-graph-theory.html" class="quarto-xref"><span>2</span></a>.</p>
+</section>
+</section>
+<section id="sec-records" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="sec-records"><span class="header-section-number">1.3</span> Способы записи сетей</h2>
+<p>Маленькую сеть можно нарисовать. Сеть из тысячи узлов рисовать долго, а прочитать такой рисунок невозможно. Нужен формальный способ записи, понятный компьютеру и другому исследователю. Основных способов два.</p>
+<p>Первый способ называется <em>списком связей</em> (edgelist). Это таблица из двух столбцов, в которой каждая строка соответствует одной связи (<a href="#tbl-edgelist" class="quarto-xref">табл.&nbsp;<span>1.1</span></a>). В ненаправленной сети порядок узлов в строке не важен: строка «Кайрат, Нуртас» означает то же, что «Нуртас, Кайрат». Список связей компактен. Его удобно хранить и передавать. Большинство программ для анализа сетей читает именно его.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-edgelist" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-edgelist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;1.1: Список связей сети «Кайрат и Нуртас»
+</figcaption>
+<div aria-describedby="tbl-edgelist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">from</th>
+<th style="text-align: left;">to</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Кайрат</td>
+<td style="text-align: left;">Нуртас</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Кайрат</td>
+<td style="text-align: left;">Асель</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Нуртас</td>
+<td style="text-align: left;">Асель</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Асель</td>
+<td style="text-align: left;">Жанна</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Жанна</td>
+<td style="text-align: left;">Арман</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Второй способ называется <em>матрицей смежности</em> (adjacency matrix). Для сети из <span class="math inline">\(N\)</span> узлов это квадратная таблица из <span class="math inline">\(N\)</span> строк и <span class="math inline">\(N\)</span> столбцов. Строки и столбцы соответствуют узлам. Элемент матрицы <span class="math inline">\(a_{ij}\)</span> стоит на пересечении строки <span class="math inline">\(i\)</span> и столбца <span class="math inline">\(j\)</span>:</p>
+<p><span id="eq-adjacency"><span class="math display">\[
+a_{ij} =
+\begin{cases}
+1, &amp; \text{если между узлами } i \text{ и } j \text{ есть связь},\\
+0, &amp; \text{если связи нет}.
+\end{cases}
+\tag{1.1}\]</span></span></p>
+<p>Фигурная скобка в этой формуле перечисляет возможные случаи. Элемент <span class="math inline">\(a_{ij}\)</span> равен единице, если узлы <span class="math inline">\(i\)</span> и <span class="math inline">\(j\)</span> связаны. В противном случае он равен нулю. Нижние индексы задают адрес элемента: первый индекс означает номер строки, второй означает номер столбца. Например, <span class="math inline">\(a_{13}\)</span> стоит в первой строке и третьем столбце. Если узлы перечислены в порядке Кайрат, Нуртас, Асель, Жанна, Арман, то <span class="math inline">\(a_{13} = 1\)</span>, потому что Кайрат дружит с Асель. Элемент <span class="math inline">\(a_{15} = 0\)</span>: Кайрат с Арманом не связан.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-adjacency" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-adjacency-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;1.2: Матрица смежности сети «Кайрат и Нуртас»
+</figcaption>
+<div aria-describedby="tbl-adjacency-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: center;">Кайрат</th>
+<th style="text-align: center;">Нуртас</th>
+<th style="text-align: center;">Асель</th>
+<th style="text-align: center;">Жанна</th>
+<th style="text-align: center;">Арман</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Кайрат</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Нуртас</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Асель</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Жанна</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Арман</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Матрица в <a href="#tbl-adjacency" class="quarto-xref">табл.&nbsp;<span>1.2</span></a> содержит ту же информацию, что список связей. На главной диагонали стоят нули: связи узла с самим собой (петли) мы не рассматриваем. Преимущество матрицы в том, что к ней применим аппарат линейной алгебры. В главе <a href="02-graph-theory.html" class="quarto-xref"><span>2</span></a> мы увидим, как с его помощью считать степени узлов.</p>
+</section>
+<section id="sec-directed-weighted" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="sec-directed-weighted"><span class="header-section-number">1.4</span> Направленные и взвешенные сети</h2>
+<section id="направленные-сети" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="направленные-сети"><span class="header-section-number">1.4.1</span> Направленные сети</h3>
+<p>Некоторые отношения симметричны по своей природе. Если Кайрат работает вместе с Нуртасом, то Нуртас работает вместе с Кайратом. Если Асель приходится родственницей Жанне, то Жанна приходится родственницей Асель. Другие отношения имеют направление. У письма есть отправитель и получатель. Дружба на первый взгляд симметрична, однако в школьных опросах дружеские номинации часто оказываются невзаимными. Асель может назвать Кайрата другом, тогда как Кайрат Асель другом не назовёт.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Определение">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Заметка</span>Определение
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Сеть называют <em>ненаправленной</em> (undirected), если её связи не имеют направления. Сеть называют <em>направленной</em> (directed) или орграфом (digraph), если связь из <span class="math inline">\(i\)</span> в <span class="math inline">\(j\)</span> не означает связи из <span class="math inline">\(j\)</span> в <span class="math inline">\(i\)</span>.</p>
+</div>
+</div>
+<p>На рисунках направление показывают стрелкой. На <a href="#fig-directed" class="quarto-xref">рис.&nbsp;<span>1.4</span></a> слева изображена ненаправленная сеть карате-клуба. Справа изображена сеть дружбы преподавателей британского университета: 81 человек и 817 направленных дружеских номинаций.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-directed" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-directed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-networks_files/figure-html/fig-directed-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-directed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;1.4: Ненаправленная сеть (карате-клуб, слева) и направленная сеть (преподаватели британского университета, справа)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>В матрице смежности разница выглядит так. Матрица ненаправленной сети симметрична относительно главной диагонали:</p>
+<p><span class="math display">\[
+a_{ij} = a_{ji} \quad \text{для всех } i, j.
+\]</span></p>
+<p>Формула говорит: если поменять индексы местами, значение не изменится. Элемент в строке <span class="math inline">\(i\)</span> и столбце <span class="math inline">\(j\)</span> равен элементу в строке <span class="math inline">\(j\)</span> и столбце <span class="math inline">\(i\)</span>. Слова «для всех <span class="math inline">\(i, j\)</span>» означают, что равенство выполняется для любой пары узлов. Наглядно это значит, что матрица зеркально отражается относительно главной диагонали, идущей из левого верхнего угла в правый нижний.</p>
+<p>В направленной сети мы договоримся, что <span class="math inline">\(a_{ij} = 1\)</span> означает связь, идущую из <span class="math inline">\(i\)</span> в <span class="math inline">\(j\)</span>. Строка матрицы тогда соответствует отправителю, столбец соответствует получателю. Из <span class="math inline">\(a_{ij} = 1\)</span> уже не следует <span class="math inline">\(a_{ji} = 1\)</span>: если Кайрат пишет Нуртасу, это не значит, что Нуртас пишет Кайрату.</p>
+</section>
+<section id="взвешенные-сети" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="взвешенные-сети"><span class="header-section-number">1.4.2</span> Взвешенные сети</h3>
+<p>До сих пор связь либо была, либо отсутствовала: <span class="math inline">\(a_{ij} \in \{0, 1\}\)</span>. Многие отношения имеют интенсивность. В данных мобильного оператора связью может быть число минут, которые два абонента проговорили за месяц. В переписке связью может быть число писем. Такую интенсивность называют <em>весом</em> связи <span class="math inline">\(w_{ij}\)</span>. В матрице смежности взвешенной сети вместо единиц стоят веса:</p>
+<p><span class="math display">\[
+a_{ij} = w_{ij}.
+\]</span></p>
+<p>Формула означает, что в клетке на пересечении строки <span class="math inline">\(i\)</span> и столбца <span class="math inline">\(j\)</span> теперь записан вес связи между узлами <span class="math inline">\(i\)</span> и <span class="math inline">\(j\)</span>. Нулевой вес по-прежнему означает отсутствие связи. Если Кайрат за месяц отправил Нуртасу 12 писем, а связи Кайрат и Нуртас соответствуют первая строка и второй столбец, то <span class="math inline">\(a_{12} = w_{12} = 12\)</span>.</p>
+<p>Большинство сетей в природе взвешены. Веса при этом часто не удаётся измерить. Поэтому взвешенную сеть нередко приближают бинарной: связь считается существующей, если её вес превышает выбранный порог. Выбор порога является решением исследователя. Его стоит обосновывать.</p>
+<p>Закари фиксировал не просто наличие отношений. Для каждой пары членов клуба он записал число различных ситуаций, в которых они взаимодействовали: на занятиях в университете, на турнирах, в студенческом баре. Исходная сеть карате-клуба взвешенная (<a href="#fig-weighted" class="quarto-xref">рис.&nbsp;<span>1.5</span></a>). В <a href="#tbl-karate-weights" class="quarto-xref">табл.&nbsp;<span>1.3</span></a> приведён фрагмент её матрицы. Мистер Хай взаимодействовал с актором 2 в четырёх ситуациях, с актором 3 в пяти. Акторы 2 и 3 пересекались в шести ситуациях.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-weighted" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-weighted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-networks_files/figure-html/fig-weighted-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-weighted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;1.5: Взвешенная сеть карате-клуба. Толщина линии пропорциональна весу связи
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div id="tbl-karate-weights" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-karate-weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;1.3: Фрагмент взвешенной матрицы смежности карате-клуба: первые пять членов клуба
+</figcaption>
+<div aria-describedby="tbl-karate-weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: center;">Мистер Хай</th>
+<th style="text-align: center;">Актор 2</th>
+<th style="text-align: center;">Актор 3</th>
+<th style="text-align: center;">Актор 4</th>
+<th style="text-align: center;">Актор 5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Мистер Хай</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Актор 2</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Актор 3</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Актор 4</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Актор 5</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-bipartite" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="sec-bipartite"><span class="header-section-number">1.5</span> Двудольные сети</h2>
+<p>Во всех примерах выше узлы были объектами одной природы: людьми, компьютерами, городами. Иногда связи соединяют объекты двух разных типов. Абитуриенты подают документы в университеты. Дети из разных семей учатся в разных школах. Жители домов ходят в магазины. Актёры снимаются в фильмах.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Определение">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Заметка</span>Определение
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Сеть называют <em>двудольной</em> (bipartite), если её узлы можно разбить на два непересекающихся множества <span class="math inline">\(U\)</span> и <span class="math inline">\(V\)</span> так, что каждая связь соединяет узел из <span class="math inline">\(U\)</span> с узлом из <span class="math inline">\(V\)</span>. Связей внутри <span class="math inline">\(U\)</span> и внутри <span class="math inline">\(V\)</span> нет.</p>
+</div>
+</div>
+<p>Если раскрасить узлы <span class="math inline">\(U\)</span> в один цвет, а узлы <span class="math inline">\(V\)</span> в другой, каждая связь соединит узлы разного цвета. Направление в двудольных сетях обычно не имеет смысла: люди ходят в фитнес-клубы, клубы в людей не ходят.</p>
+<p>Из каждой двудольной сети получаются две обычные сети, которые называют <em>проекциями</em>. В проекции на <span class="math inline">\(U\)</span> два узла из <span class="math inline">\(U\)</span> связаны, если у них есть хотя бы один общий сосед в <span class="math inline">\(V\)</span>. Проекция на <span class="math inline">\(V\)</span> строится так же. На <a href="#fig-bipartite" class="quarto-xref">рис.&nbsp;<span>1.6</span></a> в центре показана двудольная сеть. Узлы 1, 2 и 3 связаны с узлом A, поэтому в проекции на <span class="math inline">\(U\)</span> они образуют треугольник. Узел 5 связан с узлами B, C и D, поэтому в проекции на <span class="math inline">\(V\)</span> эти три узла связаны между собой.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-bipartite" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bipartite-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-networks_files/figure-html/fig-bipartite-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bipartite-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;1.6: Двудольная сеть (в центре) и две её проекции: на множество U (слева) и на множество V (справа)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Самый известный пример двудольной сети связывает голливудских актёров с фильмами, в которых они снимались. В проекции на актёров Роберт Де Ниро и Аль Пачино связаны, потому что оба снимались в фильме «Схватка». В проекции на фильмы «Лицо со шрамом» связано с «Запахом женщины»: в обоих играл Аль Пачино.</p>
+<p>При проекции часть информации теряется. Из проекции на <span class="math inline">\(U\)</span> на <a href="#fig-bipartite" class="quarto-xref">рис.&nbsp;<span>1.6</span></a> не видно, через какой узел <span class="math inline">\(V\)</span> возникла связь. Не видно и того, сколько у пары общих соседей. Поэтому проекцию иногда делают взвешенной: вес связи равен числу общих соседей.</p>
+</section>
+<section id="sec-types" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="sec-types"><span class="header-section-number">1.6</span> Типы сетей</h2>
+<p>Мы ввели три признака, по которым различаются сети. Сеть бывает направленной или ненаправленной. Её связи бывают бинарными или взвешенными. Узлы бывают одного типа (однодольная сеть, unipartite) или двух типов (двудольная сеть). Признаки независимы друг от друга. Сеть цитирования бинарна и направлена: одна статья либо цитирует другую, либо нет. Сеть соавторства бинарна и не направлена.</p>
+<p>В <a href="#tbl-types" class="quarto-xref">табл.&nbsp;<span>1.4</span></a> разобраны три примера. Помощь с домашней работой можно было бы измерять числом случаев помощи. Тогда сеть стала бы взвешенной. Тип сети зависит от того, как именно измерено отношение.</p>
+<div id="tbl-types" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;1.4: Классификация трёх сетей
+</figcaption>
+<div aria-describedby="tbl-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Сеть</th>
+<th>Направление</th>
+<th>Связи</th>
+<th>Типы узлов</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Письма между сотрудниками организации</td>
+<td>направленная</td>
+<td>взвешенные (число писем)</td>
+<td>однодольная</td>
+</tr>
+<tr class="even">
+<td>Помощь с домашней работой в классе (вопрос анкеты «кто тебе помогает»)</td>
+<td>направленная</td>
+<td>бинарные</td>
+<td>однодольная</td>
+</tr>
+<tr class="odd">
+<td>Посещения фитнес-центров жителями района за месяц</td>
+<td>не имеет смысла</td>
+<td>взвешенные (число посещений)</td>
+<td>двудольная</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Описание любой сети стоит начинать с двух вопросов. Что является узлом? Что является связью? Ответы часто оказываются менее очевидными, чем кажется. Посещения автосервисов автомобилями образуют двудольную сеть, а не однодольную: машины и автосервисы являются объектами разной природы.</p>
+</section>
+<section id="sec-networks-r" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="sec-networks-r"><span class="header-section-number">1.7</span> В R</h2>
+<p>В книге используется пакет <strong>igraph</strong>. Сеть «Кайрат и Нуртас» создаётся из списка связей функцией <code>graph_from_data_frame()</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> <span class="fu">c</span>(<span class="st">"Кайрат"</span>, <span class="st">"Кайрат"</span>, <span class="st">"Нуртас"</span>, <span class="st">"Асель"</span>, <span class="st">"Жанна"</span>),</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">to   =</span> <span class="fu">c</span>(<span class="st">"Нуртас"</span>, <span class="st">"Асель"</span>,  <span class="st">"Асель"</span>,  <span class="st">"Жанна"</span>, <span class="st">"Арман"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(edges, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>g</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>IGRAPH ad8018d UN-- 5 5 -- 
++ attr: name (v/c)
++ edges from ad8018d (vertex names):
+[1] Кайрат--Нуртас Кайрат--Асель  Нуртас--Асель  Асель --Жанна  Жанна --Арман </code></pre>
+</div>
+</div>
+<p>Первая строка вывода описывает сеть кодом из четырёх позиций. <code>U</code> означает ненаправленную сеть (<code>D</code> означает направленную). <code>N</code> означает, что у узлов есть имена. <code>W</code> на третьей позиции означала бы взвешенную сеть. Далее следуют число узлов и число связей. Строка <code>attr</code> перечисляет атрибуты: буква перед косой чертой показывает уровень (<code>g</code> для графа, <code>v</code> для узлов, <code>e</code> для связей), буква после неё показывает тип (<code>c</code> для текста, <code>n</code> для чисел).</p>
+<p>Матрица смежности и обратное преобразование:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">as_adjacency_matrix</span>(g, <span class="at">sparse =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">graph_from_adjacency_matrix</span>(m, <span class="at">mode =</span> <span class="st">"undirected"</span>)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Готовую сеть удобнее всего хранить в формате RDS: <code>readRDS()</code> сразу возвращает объект igraph. Учебные сети из этой главы есть в пакете <strong>igraphdata</strong>. Алгоритмы укладки узлов на плоскости используют случайные числа. Чтобы рисунок не менялся от запуска к запуску, укладку стоит вычислить один раз и сохранить. Это особенно полезно при сравнении одной сети в два момента времени:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"karate"</span>, <span class="at">package =</span> <span class="st">"igraphdata"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>lay <span class="ot">&lt;-</span> <span class="fu">layout_with_fr</span>(karate)   <span class="co"># координаты узлов, матрица N x 2</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(karate, <span class="at">layout =</span> lay, <span class="at">edge.width =</span> <span class="fu">E</span>(karate)<span class="sc">$</span>weight)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Функции <code>V()</code> и <code>E()</code> дают доступ к узлам и связям. Например, <code>E(karate)$weight</code> возвращает веса связей. Проекции двудольной сети строит <code>bipartite_projection()</code>. Тип узла задаётся логическим атрибутом <code>type</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">graph_from_literal</span>(<span class="dv">1</span><span class="sc">-</span>A, <span class="dv">2</span><span class="sc">-</span>A, <span class="dv">3</span><span class="sc">-</span>A, <span class="dv">2</span><span class="sc">-</span>B, <span class="dv">5</span><span class="sc">-</span>B, <span class="dv">4</span><span class="sc">-</span>C, <span class="dv">5</span><span class="sc">-</span>C, <span class="dv">5</span><span class="sc">-</span>D, <span class="dv">6</span><span class="sc">-</span>D, <span class="dv">7</span><span class="sc">-</span>D)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(b)<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">V</span>(b)<span class="sc">$</span>name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">bipartite_projection</span>(b)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Функция <code>as_data_frame()</code> есть в обоих пакетах, igraph и tidyverse. R вызывает версию из пакета, загруженного последним. Чтобы избежать путаницы, пакет указывают явно: <code>igraph::as_data_frame()</code>.</p>
+</section>
+<section id="sec-networks-ex" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="sec-networks-ex"><span class="header-section-number">1.8</span> Вопросы и упражнения</h2>
+<ol type="1">
+<li>Придумайте по одной сети для каждого из восьми сочетаний признаков: бинарная или взвешенная, направленная или ненаправленная, однодольная или двудольная. Для каждой сети укажите, что является узлом и что является связью.</li>
+<li>Определите тип сетей: звонки между абонентами с учётом длительности; банковские переводы между компаниями; соавторство научных статей; схема метро.</li>
+<li>Запишите список связей двудольной сети с <a href="#fig-bipartite" class="quarto-xref">рис.&nbsp;<span>1.6</span></a>. Постройте для неё таблицу, в которой строки соответствуют узлам <span class="math inline">\(U\)</span>, а столбцы узлам <span class="math inline">\(V\)</span>. Чем такая таблица отличается от матрицы смежности?</li>
+<li>Горожане Кёнигсберга решили построить восьмой мост. Между какими участками суши его нужно провести, чтобы маршрут через каждый мост ровно по одному разу стал возможен? Где должен начинаться и заканчиваться такой маршрут?</li>
+<li>Предложите два объяснения разделения карате-клуба на две группы, отличные от реальной истории. Какие данные помогли бы выбрать между ними?</li>
+</ol>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-euler1741" class="csl-entry" role="listitem">
+Euler, Leonhard. 1741 г. <span>«Solutio problematis ad geometriam situs pertinentis»</span>. <em>Commentarii academiae scientiarum Petropolitanae</em> 8: 128‑140.
+</div>
+<div id="ref-zachary1977" class="csl-entry" role="listitem">
+Zachary, Wayne W. 1977 г. <span>«An Information Flow Model for Conflict and Fission in Small Groups»</span>. <em>Journal of Anthropological Research</em> 33 (4): 452‑473.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Скопировано");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Скопировано");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./glossary.html" class="pagination-link" aria-label="Словарь терминов">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Словарь терминов</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./02-graph-theory.html" class="pagination-link" aria-label="Элементы теории графов">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Элементы теории графов</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Введение в анализ социальных сетей. Автор: Дархан Медеуов.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Эта книга составлена с помощью <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

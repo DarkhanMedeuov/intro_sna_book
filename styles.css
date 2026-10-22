@@ -1,0 +1,31 @@
+/* Переключатель языка внизу левого меню: отделён чертой от оглавления. */
+.quarto-sidebar-footer {
+  margin-top: 1.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #dee2e6;
+}
+.sidebar-lang-link {
+  font-weight: 500;
+}
+
+/* Словарь терминов. Ширины колонок задаются явно (иначе длинные названия
+   разделов в последней колонке сжимают определения). На узком экране таблица
+   сохраняет те же пропорции и прокручивается внутри своего блока, страница
+   при этом остаётся на месте. */
+.glossary {
+  overflow-x: auto;
+}
+.glossary table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 740px;
+}
+.glossary td {
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+/* Quarto запрещает перенос внутри ссылок на разделы (white-space: nowrap),
+   из-за чего длинные названия разделов вылезают из последней колонки. */
+.glossary a.quarto-xref {
+  white-space: normal;
+}
