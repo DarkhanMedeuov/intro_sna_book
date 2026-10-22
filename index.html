@@ -8,7 +8,7 @@
 
 <meta name="author" content="Дархан Медеуов">
 
-<title>Введение в анализ социальных сетей</title>
+<title>Введение в социально-сетевой анализ</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -158,7 +158,7 @@ div.csl-indent {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Введение в анализ социальных сетей</a> 
+      <a href="./">Введение в социально-сетевой анализ</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Переключить режим чтения">
   <div class="quarto-reader-toggle-btn">
@@ -260,7 +260,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Введение в анализ социальных сетей</h1>
+<h1 class="title">Введение в социально-сетевой анализ</h1>
 </div>
 
 
@@ -289,14 +289,17 @@ div.csl-indent {
 </header>
 
 
+<p><img src="images/cover_ru.png" title="Введение в социально-сетевой анализ" class="quarto-cover-image nolightbox img-fluid" alt="Обложка учебника «Введение в социально-сетевой анализ»"></p>
 <!-- Первая страница книги: без заголовка, как титульный лист учебника
      по статистике той же серии. Название, автор и дата выводятся из _quarto.yml,
-     обложка тоже (cover-image, ждём файл от дизайнера). -->
+     обложка из _quarto-ru.yml (cover-image). Выходные данные в конце страницы
+     перенесены из титульного листа редакции (source/Учебник SNA титулка.docx). -->
 <p>Редактор: Дмитрий Серебренников.</p>
 <p>Онлайн-учебник подготовлен в рамках программно-целевого финансирования Комитета науки Министерства науки и высшего образования Республики Казахстан на 2025-2027 гг.: «Вычислительные социальные науки: новые горизонты методологии и доказательной политики» (ИРН BR28713139).</p>
+<p>«Введение в социально-сетевой анализ»: бесплатный открытый онлайн-учебник по модулю Computational social science для самостоятельного изучения с возможностью практических занятий на языке программирования R.</p>
 <p>Эта книга представляет собой первый казахстанский учебник по социально-сетевому анализу. Она задумана как базовое введение в предмет: в ней собраны понятия и методы, с которых начинается самостоятельная работа с сетевыми данными. Ориентиры для более глубокого погружения даны в следующем абзаце.</p>
 <p>Анализ социальных сетей давно стал обширной областью со своими журналами, конференциями и десятками методов. Мы выбрали небольшой набор понятий, необходимых для начала работы. К ним добавлен один подход к моделированию сетей. Прочитав книгу, читатель сможет описать сеть, сравнить её со случайной сетью и построить первую модель её формирования. Тем, кто захочет пойти дальше, стоит обратиться к классическим учебникам <span class="citation" data-cites="wasserman1994 borgatti2018">(<a href="references.html#ref-wasserman1994" role="doc-biblioref">Wasserman и Faust 1994 г.</a>; <a href="references.html#ref-borgatti2018" role="doc-biblioref">Borgatti и др. 2018 г.</a>)</span> и к книге Альберта-Ласло Барабаши о науке о сетях <span class="citation" data-cites="barabasi2016">(<a href="references.html#ref-barabasi2016" role="doc-biblioref">Barabási 2016 г.</a>)</span>.</p>
-<p>Учебник предполагает, что читатель уже знаком с основами статистики и анализа данных в R. Если это не так, для полноценного понимания материала мы предлагаем сначала обратиться к учебнику <a href="https://darkhanmedeuov.github.io/intro_statistics_book/">«Введение в статистику и программирование на языке R»</a>, изданному в рамках той же серии.</p>
+<p>Учебник предназначен для студентов социальных и гуманитарных направлений, а также для всех, кто хочет уверенно работать с данными и понимать современные научные публикации. Он предполагает, что читатель уже знаком с основами статистики и анализа данных в R. Если это не так, для полноценного понимания материала мы предлагаем сначала обратиться к учебнику <a href="https://darkhanmedeuov.github.io/intro_statistics_book/">«Введение в статистику и программирование на языке R»</a>, изданному в рамках той же серии.</p>
 <section id="как-устроена-книга" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="как-устроена-книга">Как устроена книга</h2>
 <p>Главы <a href="01-networks.html" class="quarto-xref"><span>1&nbsp; Сети и графы</span></a> и <a href="02-graph-theory.html" class="quarto-xref"><span>2&nbsp; Элементы теории графов</span></a> вводят язык: узлы и связи, типы сетей, степени, плотность, пути и расстояния. Главы <a href="03-centrality.html" class="quarto-xref"><span>3&nbsp; Центральность</span></a> и <a href="04-ties-and-groups.html" class="quarto-xref"><span>4&nbsp; Взаимность, гомофилия, кластеризация</span></a> посвящены описанию сетей. В них разобраны центральности узлов, взаимность, гомофилия, кластеризация и сообщества. Главы <a href="05-random-graphs.html" class="quarto-xref"><span>5&nbsp; Случайные графы</span></a> и <a href="06-ergm.html" class="quarto-xref"><span>6&nbsp; Экспоненциальные модели случайных графов</span></a> переходят от описания к моделям: сначала к полностью случайным сетям, затем к экспоненциальным моделям случайных графов. Глава <a href="07-semantic-networks.html" class="quarto-xref"><span>7&nbsp; Практикум: семантическая сеть</span></a> служит практикумом. В ней все этапы анализа пройдены на одном примере, семантической сети научной статьи. Главы стоит читать по порядку: каждая опирается на предыдущие.</p>
@@ -326,16 +329,28 @@ div.csl-indent {
 </section>
 <section id="выходные-данные" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="выходные-данные">Выходные данные</h2>
-<!-- TODO: титульный лист и оборот титульного листа пришлёт Митя.
-     Когда придут, положить их в images/ (imprint_ru_1.png, imprint_ru_2.png)
-     и вставить сюда так же, как в intro_statistics/imprint.qmd, вместе с УДК,
-     ББК и ISBN, если они будут присвоены. -->
-<p>Выходные данные издания будут опубликованы здесь после регистрации.</p>
+<!-- Перенесено из титульного листа редакции (source/Учебник SNA титулка.docx).
+     Тире из библиографической записи и аннотации убраны (правило 1 CLAUDE.md).
+     TODO: ISBN ещё не присвоен, в титульном листе поле пустое. Когда присвоят,
+     добавить строку «ISBN ...» после записи М42 и, как в учебнике по статистике,
+     штрих-код (images/isbn_barcode_ru.png, ширина 240). -->
+<p>УДК 316(075.8)<br>
+ББК 60.5я73<br>
+М42</p>
+<p>Рекомендовано Учёным советом КФ «Фонд «El Umiti»» (протокол № 8 от 30 сентября 2026 года).</p>
+<p>Рецензенты:</p>
+<ul>
+<li>Тернов Н.М., PhD, преподаватель кафедры социологии ЕНУ им. Л.Н. Гумилёва;</li>
+<li>Отар Э., PhD социологии, доцент, член Ассоциации социологов Казахстана.</li>
+</ul>
+<p><strong>М42</strong> Медеуов Д.Ж. Введение в социально-сетевой анализ. Астана: КФ «Фонд «El Umiti»», 2026.</p>
+<p>© КФ «Фонд «El Umiti»», 2026<br>
+© Медеуов Д.Ж., 2026</p>
 </section>
 <section id="для-цитирования" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="для-цитирования">Для цитирования</h2>
 <blockquote class="blockquote">
-<p>Медеуов Д. Введение в анализ социальных сетей: онлайн-учебник. 2026. URL: <a href="https://darkhanmedeuov.github.io/intro_sna_book/" class="uri">https://darkhanmedeuov.github.io/intro_sna_book/</a></p>
+<p>Медеуов Д.Ж. Введение в социально-сетевой анализ: онлайн-учебник. Астана: КФ «Фонд «El Umiti»», 2026. URL: <a href="https://darkhanmedeuov.github.io/intro_sna_book/" class="uri">https://darkhanmedeuov.github.io/intro_sna_book/</a></p>
 </blockquote>
 
 
@@ -772,7 +787,7 @@ Zachary, Wayne W. 1977 г. <span>«An Information Flow Model for Conflict and Fi
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Введение в анализ социальных сетей. Автор: Дархан Медеуов.</p>
+<p>Введение в социально-сетевой анализ. Автор: Дархан Медеуов.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;
