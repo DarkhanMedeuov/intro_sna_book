@@ -29,3 +29,21 @@
 .glossary a.quarto-xref {
   white-space: normal;
 }
+
+/* Титульный лист (index.qmd). Служебный заголовок скрыт от глаз, но доступен
+   экранным читалкам; сама секция с текстом остаётся видимой. */
+.titul-page > h2 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+/* Выравнивание как в титульном листе редакции. */
+.titul-center {
+  text-align: center;
+}
+.titul-right {
+  text-align: right;
+}
