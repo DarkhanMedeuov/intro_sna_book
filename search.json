@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Введение в социально-сетевой анализ",
     "section": "",
-    "text": "Титульный лист\nУДК 316(075.8)\nББК 60.5я73\nМ42\nМ42 Медеуов Д.Ж. Введение в социально-сетевой анализ. Астана: КФ «Фонд «El Umiti»», 2026.\nОнлайн-учебник подготовлен в рамках программно-целевого финансирования Комитета науки Министерства науки и высшего образования Республики Казахстан на 2025-2027 гг.: «Вычислительные социальные науки: новые горизонты методологии и доказательной политики» (ИРН BR28713139).\n«Введение в социально-сетевой анализ»: бесплатный открытый онлайн-учебник по модулю Computational social science для самостоятельного изучения с возможностью практических занятий на языке программирования R.\nУчебник предназначен для студентов социальных и гуманитарных направлений, а также для всех, кто хочет уверенно работать с данными и понимать современные научные публикации.",
+    "text": "Титульный лист\nУДК 316.472.4:004.9\nББК 60.524.224\nМ39\nРецензенты:\nМ39 Медеуов Д.Ж. Введение в социально-сетевой анализ. Астана: КФ «Фонд «El Umiti»», 2026.\nОнлайн-учебник подготовлен в рамках программно-целевого финансирования Комитета науки Министерства науки и высшего образования Республики Казахстан на 2025-2027 гг.: «Вычислительные социальные науки: новые горизонты методологии и доказательной политики» (ИРН BR28713139).\n«Введение в социально-сетевой анализ»: бесплатный открытый онлайн-учебник по модулю Computational social science для самостоятельного изучения с возможностью практических занятий на языке программирования R.\nУчебник предназначен для студентов социальных и гуманитарных направлений, а также для всех, кто хочет уверенно работать с данными и понимать современные научные публикации.\nISBN 978-601-08-6696-6\nМеждународный стандартный книжный номер (ISBN), УДК, ББК и штрих-код присвоены Национальной государственной книжной палатой Республики Казахстан.",
     "crumbs": [
       "Титульный лист"
     ]
@@ -14,7 +14,7 @@
     "href": "index.html#титульный-лист",
     "title": "Введение в социально-сетевой анализ",
     "section": "",
-    "text": "Рекомендовано Учёным советом\nКФ «Фонд «El Umiti»»\n(протокол № 5 от 30 сентября 2026 года).\n\n\n\n\n\n\n\n© КФ «Фонд «El Umiti»», 2026\n© Медеуов Д.Ж., 2026",
+    "text": "Рекомендовано Учёным советом\nКФ «Фонд «El Umiti»»\n(протокол № 5 от 30 сентября 2026 года).\n\n\n\nPhD, Мендыбаев Бирлик;\nPhD, преподаватель кафедры социологии ЕНУ им. Л.Н. Гумилёва, Тернов Н.\n\n\n\n\n\n\n\n\n\n© КФ «Фонд «El Umiti»», 2026\n© Медеуов Д.Ж., 2026",
     "crumbs": [
       "Титульный лист"
     ]
@@ -54,7 +54,7 @@
     "href": "preface.html#для-цитирования",
     "title": "Предисловие",
     "section": "Для цитирования",
-    "text": "Для цитирования\n\nМедеуов Д.Ж. Введение в социально-сетевой анализ: онлайн-учебник. Астана: КФ «Фонд «El Umiti»», 2026. URL: https://darkhanmedeuov.github.io/intro_sna_book/\n\nГод издания: 2026.\n\n\n\n\nBarabási, Albert-László. 2016 г. Network Science. Cambridge University Press.\n\n\nBorgatti, Stephen P., Martin G. Everett и Jeffrey C. Johnson. 2018 г. Analyzing Social Networks. 2-я изд. SAGE.\n\n\nPadgett, John F. и Christopher K. Ansell. 1993 г. «Robust Action and the Rise of the Medici, 1400-1434». American Journal of Sociology 98 (6): 1259‑1319.\n\n\nWasserman, Stanley и Katherine Faust. 1994 г. Social Network Analysis: Methods and Applications. Cambridge University Press.\n\n\nZachary, Wayne W. 1977 г. «An Information Flow Model for Conflict and Fission in Small Groups». Journal of Anthropological Research 33 (4): 452‑473.",
+    "text": "Для цитирования\n\nМедеуов Д.Ж. Введение в социально-сетевой анализ: онлайн-учебник. Астана: КФ «Фонд «El Umiti»», 2026. ISBN 978-601-08-6696-6. URL: https://darkhanmedeuov.github.io/intro_sna_book/\n\nГод издания: 2026.\n\n\n\n\nBarabási, Albert-László. 2016 г. Network Science. Cambridge University Press.\n\n\nBorgatti, Stephen P., Martin G. Everett и Jeffrey C. Johnson. 2018 г. Analyzing Social Networks. 2-я изд. SAGE.\n\n\nPadgett, John F. и Christopher K. Ansell. 1993 г. «Robust Action and the Rise of the Medici, 1400-1434». American Journal of Sociology 98 (6): 1259‑1319.\n\n\nWasserman, Stanley и Katherine Faust. 1994 г. Social Network Analysis: Methods and Applications. Cambridge University Press.\n\n\nZachary, Wayne W. 1977 г. «An Information Flow Model for Conflict and Fission in Small Groups». Journal of Anthropological Research 33 (4): 452‑473.",
     "crumbs": [
       "Предисловие"
     ]
